@@ -16,6 +16,10 @@ class User(db.Model):
     GENDER_FEMALE = 0
     GENDER_MALE = 1
 
+    USER_NOT_FORBIDDEN = 1
+    USER_FORBIDDEN = 0
+
+
     __tablename__ = "users" # 表名
 
     # 主键
@@ -23,6 +27,9 @@ class User(db.Model):
 
     # 用户账号
     account = db.Column(db.String(20), nullable=False, unique=True)
+
+    # 用于封号
+    valid = db.Column(db.SMALLINT, default=USER_NOT_FORBIDDEN)
 
     # 昵称, 默认为帐号名
     nickname = db.Column(db.String(20), default=account)
@@ -74,6 +81,9 @@ class Post(db.Model):
 
     # 标题
     title = db.Column(db.String(40))
+
+    # 描述信息(比如说公众号的推文的描述信息)
+    description = db.Column(db.String(140))
 
     # 内容
     content = db.Column(db.TEXT)

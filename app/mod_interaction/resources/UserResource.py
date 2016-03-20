@@ -1,9 +1,9 @@
 # coding=utf-8
 __author__ = 'smallfly'
 
-from flask_restful import Resource, fields, marshal, reqparse
-from app.mod_interaction.database_operations import user_operation
-from datetime import datetime
+from flask_restful import fields, reqparse
+from app.mod_interaction.models import User
+from app.mod_interaction.resources.GenericResource import GenericResource
 
 structure = {
     "id": fields.Integer,
@@ -14,6 +14,7 @@ structure = {
     "profile": fields.String
 }
 
+# 验证参数
 put_parser = reqparse.RequestParser(trim=True)
 put_parser.add_argument("id", type=int, required=True, location='json')
 # 后面需要token限制
@@ -23,41 +24,54 @@ put_parser.add_argument("birthday", type=int, location='json')
 put_parser.add_argument("profile", location='json')
 put_parser.add_argument("gender", location='json')
 
+PUT_ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender")
 
-class UserResource(Resource):
+INITIAL_KWARGS = {
+    GenericResource.MODEL: User,
+    GenericResource.PARSERS_FOR_METHOD: {
+        "put": put_parser
+    },
+    GenericResource.MARSHAL_STRUCTURE: structure,
+    GenericResource.RESOURCE_NAME: "user",
+    GenericResource.ACCEPTED_VARIABLE_DICT: {
+        "put": PUT_ACCEPT_VARIABLES
+    },
+    GenericResource.TIMESTAMP_TO_STRING_LIST: [
+      "birthday"
+    ],
+    GenericResource.NOT_ALLOWED_METHODS_LIST: [
+        "delete"
+    ]
+}
 
-    # 对外的接口仅仅允许修改这些数据
-    ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender")
+# class UserResource(GenericResource):
+#
+#     # curl --header "Content-type: application/json" localhost:8080/interaction/api/v2/user -X PUT -d '{"id": 1, "birthday": "819648000", "nickname": "xiaofud", "gender": 1, "profile": "hello world"}'
+#     # date -d "1995-12-23" "+%s"    获取时间戳
+#     def put(self):
+#         args = put_parser.parse_args()
+#         if args["birthday"] is not None:
+#             birthday = datetime.fromtimestamp(int(args["birthday"]))
+#             birthday = birthday.strftime("%Y-%m-%d %H:%M:%S")
+#             args["birthday"] = birthday
+#             # print(birthday)
+#         user_id = args.pop("id")
+#
+#         # for arg in args:
+#         #     if arg not in UserResource.ACCEPT_VARIABLES:
+#         #         args.pop(arg)
+#         # 去除其他参数, 避免用户自己修改token之类的数据
+#         helpers.clean_arguments(args, PUT_ACCEPT_VARIABLES)
+#
+#         result = user_operation.update_user_by_id(user_id, **args)
+#         if result == True:
+#             return {"status": "updated"}, 200
+#         else:
+#             if result[1] == user_operation.common.ERROR_NOT_FOUND:
+#                 return {"error": "user not found"}, 404
+#             else:
+#                 return {"error": "failed"}, 500 # Internal Server Error
 
-    # curl localhost:8080/interaction/api/v2/user/1 -i
-    def get(self, id):
-        user = user_operation.get_user_by_id(id)
-        if user is None:
-            return {"error": "invalid id"}, 404    # not found
-        return marshal(user, structure), 200
-
-    # curl --header "Content-type: application/json" localhost:8080/interaction/api/v2/user -X PUT -d '{"id": 1, "birthday": "819648000", "nickname": "xiaofud", "gender": 1, "profile": "hello world"}'
-    # date -d "1995-12-23" "+%s"    获取时间戳
-    def put(self):
-        args = put_parser.parse_args()
-        if args["birthday"] is not None:
-            birthday = datetime.fromtimestamp(int(args["birthday"]))
-            birthday = birthday.strftime("%Y-%m-%d %H:%M:%S")
-            args["birthday"] = birthday
-            # print(birthday)
-        user_id = args.pop("id")
-        # 去除其他参数, 避免用户自己修改token之类的数据
-        for arg in args:
-            if arg not in UserResource.ACCEPT_VARIABLES:
-                args.pop(arg)
-        result = user_operation.update_user_by_id(user_id, **args)
-        if result == True:
-            return {"status": "updated"}, 200
-        else:
-            if result[1] == user_operation.common.ERROR_NOT_FOUND:
-                return {"error": "user not found"}, 404
-            else:
-                return {"error": "failed"}, 500 # Internal Server Error
 
 
 # Argument Locations
