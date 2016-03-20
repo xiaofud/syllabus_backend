@@ -10,14 +10,14 @@ interaction_blueprint = Blueprint("interaction", __name__, url_prefix="/interact
 from app.mod_interaction import models
 
 # 加载Resource
-from app.mod_interaction.resources.User import User
+from app.mod_interaction.resources.UserResource import UserResource
 
 from flask_restful import Api
 
 api = Api(interaction_blueprint, prefix="/api/v2")
 
 # curl localhost:8080/interaction/api/v2/user/1
-api.add_resource(User, "/user/<int:id>", endpoint="user")
+api.add_resource(UserResource, "/user/<int:id>", "/user", endpoint="user")
 
 
 
