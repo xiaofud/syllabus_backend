@@ -1,0 +1,11 @@
+# cached files
+__pycache__/
+
+# testing
+testing/
+
+# hello_world
+app/mod_hello_blueprint/
+
+# config file
+config.conf
