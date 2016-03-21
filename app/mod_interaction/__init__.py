@@ -12,6 +12,8 @@ from app.mod_interaction import models
 # 加载Resource
 from app.mod_interaction.resources import UserResource
 from app.mod_interaction.resources import PostResource
+from app.mod_interaction.resources import CommentResource
+from app.mod_interaction.resources import ThumbUpResource
 from app.mod_interaction.resources.GenericResource import GenericResource
 
 from flask_restful import Api
@@ -28,6 +30,19 @@ api.add_resource(GenericResource, "/user/<int:id>", "/user", endpoint="user", re
 # curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X PUT -d '{"title": "testing_title", "content": "haha", "id": 2, "description": "do not click me", "uid": 1, "post_type": 1}'
 # api.add_resource(PostResource, "/post/<int:id>", "/post", endpoint="post")
 api.add_resource(GenericResource, "/post/<int:id>", "/post", endpoint="post", resource_class_kwargs=PostResource.INITIAL_KWARGS)
+
+# curl localhost:8080/interaction/api/v2/comment/1
+# curl localhost:8080/interaction/api/v2/comment -i -X POST -H "Content-type:application/json" -d '{"post_id": 1, "uid": 1, "comment": "nice post!"}'
+# curl localhost:8080/interaction/api/v2/comment -i -X PUT -H "Content-type:application/json" -d '{"id": 1, "post_id": 1, "uid": 1, "comment": "amazing post!"}'
+# curl -i -X DELETE localhost:8080/interaction/api/v2/comment/1
+api.add_resource(GenericResource, "/comment/<int:id>", "/comment", endpoint="comment", resource_class_kwargs=CommentResource.INITIAL_KWARGS)
+
+# curl localhost:8080/interaction/api/v2/like/1
+# curl localhost:8080/interaction/api/v2/like -i -X POST -H "Content-type:application/json" -d '{"post_id": 1, "uid": 1}'
+# curl -i -X DELETE localhost:8080/interaction/api/v2/like/1
+api.add_resource(GenericResource, "/like/<int:id>", "/like", endpoint="like", resource_class_kwargs=ThumbUpResource.INITIAL_KWARGS)
+
+
 
 
 

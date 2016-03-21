@@ -3,6 +3,7 @@ __author__ = 'smallfly'
 
 from flask_restful import fields, reqparse
 from app.mod_interaction.models import User
+# from app.mod_interaction.resources import ThumbUpResource
 from app.mod_interaction.resources.GenericResource import GenericResource
 
 structure = {
@@ -11,7 +12,8 @@ structure = {
     "nickname": fields.String,
     "gender": fields.Integer,
     "birthday": fields.String,
-    "profile": fields.String
+    "profile": fields.String,
+    # "thumb_ups": fields.List(fields.Nested(ThumbUpResource.structure))
 }
 
 # 验证参数

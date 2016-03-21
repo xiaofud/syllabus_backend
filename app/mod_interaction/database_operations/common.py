@@ -16,6 +16,9 @@ def query_by_id(model, id_):
     """
     return model.query.filter_by(id=id_).first()
 
+def fetch_all(model):
+    return model.query.all()
+
 def add_to_db(db, thing):
     try:
         db.session.add(thing)

@@ -32,6 +32,9 @@ class GenericResource(Resource):
     # 禁用的http方法
     NOT_ALLOWED_METHODS_LIST = "NOT_ALLOWED_METHODS_LIST"
 
+    # 额外的处理
+    CALLBACKS_FOR_METHODS_DICT = "CALLBACKS_FOR_METHODS_DICT"
+
 
 
     def __init__(self, **kwargs):
@@ -42,6 +45,7 @@ class GenericResource(Resource):
         self.parsers = kwargs[GenericResource.PARSERS_FOR_METHOD]
         self.time_to_string_list = kwargs.pop(GenericResource.TIMESTAMP_TO_STRING_LIST, None)
         self.not_allowed_methods = kwargs.pop(GenericResource.NOT_ALLOWED_METHODS_LIST, None)
+        self.callbacks = kwargs.pop(GenericResource.CALLBACKS_FOR_METHODS_DICT, None)
 
 
     def get(self, id=None):
@@ -52,10 +56,12 @@ class GenericResource(Resource):
 
         if id is None:
             return {"error": "bad request"}, 401
+
+
         thing = common.query_by_id(self.model, id)
         # 没找到的话
         if thing is None:
-            return {"error": "invalid id{} for{}".format(id, self.resource_name)}, 404
+            return {"error": "invalid id {} for {}".format(id, self.resource_name)}, 404
         return marshal(thing, self.marshal_structure), 200
 
     def post(self):
@@ -63,6 +69,8 @@ class GenericResource(Resource):
         # 先检查方法是否可用
         if self.not_allowed_methods is not None and "post" in self.not_allowed_methods:
             return {"error": "method not allowed"}, 403
+
+
 
         if "post" in self.parsers:
             args = self.parsers["post"].parse_args()
@@ -73,6 +81,17 @@ class GenericResource(Resource):
                 for key in self.time_to_string_list:
                     if key in args:
                         args[key] = helpers.timestamp_to_string(args[key])
+
+        # 调用回调方法
+        if self.callbacks is not None and "post" in self.callbacks:
+            # print("callback")
+            ret_val = self.callbacks["post"](args)
+            # 比如说有用户打算重复投票
+            # print("called back returned")
+            # print(args)
+            if ret_val != False:
+                return ret_val
+
 
         result = common.new_record(db, self.model, **args)
         if result != False:
@@ -88,7 +107,8 @@ class GenericResource(Resource):
 
         if "put" in self.parsers:
             args = self.parsers["put"].parse_args()
-            helpers.clean_arguments(args, self.accepted_variable_dict["put"])
+            if "put" in self.accepted_variable_dict:
+                helpers.clean_arguments(args, self.accepted_variable_dict["put"])
             # 进行时间处理
             if self.time_to_string_list is not None:
                 for key in self.time_to_string_list:
