@@ -3,6 +3,7 @@ __author__ = 'smallfly'
 
 from flask_restful import fields, reqparse
 from app.mod_interaction.resources.GenericResource import GenericResource
+from app.mod_interaction.database_operations import post_operation
 from app.mod_interaction.models import Post
 
 structure = {
@@ -22,16 +23,21 @@ basic_parser.add_argument("content", required=True, location="json")
 basic_parser.add_argument("description", location="json")
 basic_parser.add_argument("uid", type=int, required=True, location="json")
 basic_parser.add_argument("post_type", type=int, required=True, location="json")
+basic_parser.add_argument("token", required=True, location="json")
 
 # 需要提交之前修改的id
 put_parser = basic_parser.copy()
 put_parser.add_argument("id", type=int, required=True, location="json")
 
+delete_parser = reqparse.RequestParser(trim=True)
+delete_parser.add_argument("token", required=True, location="json")
+delete_parser.add_argument("uid", required=True, location="json")
+
 # 新的对象的参数
-POST_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type")
+POST_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "token")
 
 # 用于修改之前post过的数据
-PUT_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "id")
+PUT_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "id", "token")
 
 # POST_RESOURCE_ACCEPTED_VARIABLE_DICT = {
 #     "post": POST_ACCEPT_VARIABLES,
@@ -46,10 +52,15 @@ INITIAL_KWARGS = {
     GenericResource.MARSHAL_STRUCTURE: structure,
     GenericResource.PARSERS_FOR_METHOD:{
         "post": basic_parser,
-        "put": put_parser
+        "put": put_parser,
+        "delete": delete_parser
     },
     GenericResource.MODEL: Post,
-    GenericResource.RESOURCE_NAME: "post"
+    GenericResource.RESOURCE_NAME: "post",
+    GenericResource.TOKEN_CHECK_FOR_METHODS_DICT:{
+        "post": post_operation.check_token,
+        "delete": post_operation.check_token
+    }
 }
 
 # class PostResource(Resource):

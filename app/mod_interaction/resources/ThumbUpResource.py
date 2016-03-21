@@ -31,7 +31,7 @@ INITIAL_KWARGS = {
     GenericResource.NOT_ALLOWED_METHODS_LIST:[
         "put"
     ],
-    GenericResource.CALLBACKS_FOR_METHODS_DICT:{
+    GenericResource.EXTRA_CALLBACKS_FOR_METHODS_DICT:{
         "post": thumb_up_operation.check_multiple_likes
     }
 }

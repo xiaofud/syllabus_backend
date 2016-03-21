@@ -13,6 +13,7 @@ structure = {
     "gender": fields.Integer,
     "birthday": fields.String,
     "profile": fields.String,
+    # "token": fields.String
     # "thumb_ups": fields.List(fields.Nested(ThumbUpResource.structure))
 }
 

@@ -33,8 +33,11 @@ class GenericResource(Resource):
     NOT_ALLOWED_METHODS_LIST = "NOT_ALLOWED_METHODS_LIST"
 
     # 额外的处理
-    CALLBACKS_FOR_METHODS_DICT = "CALLBACKS_FOR_METHODS_DICT"
+    EXTRA_CALLBACKS_FOR_METHODS_DICT = "EXTRA_CALLBACKS_FOR_METHODS_DICT"
 
+
+    # 检测token
+    TOKEN_CHECK_FOR_METHODS_DICT = "TOKEN_CHECK_FOR_METHODS_DICT"
 
 
     def __init__(self, **kwargs):
@@ -45,7 +48,8 @@ class GenericResource(Resource):
         self.parsers = kwargs[GenericResource.PARSERS_FOR_METHOD]
         self.time_to_string_list = kwargs.pop(GenericResource.TIMESTAMP_TO_STRING_LIST, None)
         self.not_allowed_methods = kwargs.pop(GenericResource.NOT_ALLOWED_METHODS_LIST, None)
-        self.callbacks = kwargs.pop(GenericResource.CALLBACKS_FOR_METHODS_DICT, None)
+        self.extra_callbacks = kwargs.pop(GenericResource.EXTRA_CALLBACKS_FOR_METHODS_DICT, None)
+        self.token_check_callbacks = kwargs.pop(GenericResource.TOKEN_CHECK_FOR_METHODS_DICT, None)
 
 
     def get(self, id=None):
@@ -57,6 +61,23 @@ class GenericResource(Resource):
         if id is None:
             return {"error": "bad request"}, 401
 
+        if "get" in self.parsers:
+            args = self.parsers["get"].parse_args()
+            if "get" in self.accepted_variable_dict:
+                helpers.clean_arguments(args, self.accepted_variable_dict["get"])
+            # 进行时间处理
+            if self.time_to_string_list is not None:
+                for key in self.time_to_string_list:
+                    if key in args:
+                        args[key] = helpers.timestamp_to_string(args[key])
+
+        # 看看是否需要检查token
+        if self.token_check_callbacks is not None and "get" in self.token_check_callbacks:
+            if not self.token_check_callbacks["get"](args):
+                return {"error": "unauthorized"}, 401 # Unauthorized
+
+        # 到这里要去掉token, 因为不允许用户写入token
+        args.pop("token")
 
         thing = common.query_by_id(self.model, id)
         # 没找到的话
@@ -82,10 +103,18 @@ class GenericResource(Resource):
                     if key in args:
                         args[key] = helpers.timestamp_to_string(args[key])
 
+        # 看看是否需要检查token
+        if self.token_check_callbacks is not None and "post" in self.token_check_callbacks:
+            if not self.token_check_callbacks["post"](args):
+                return {"error": "unauthorized"}, 401 # Unauthorized
+
+        # 到这里要去掉token, 因为不允许用户写入token
+        args.pop("token")
+
         # 调用回调方法
-        if self.callbacks is not None and "post" in self.callbacks:
+        if self.extra_callbacks is not None and "post" in self.extra_callbacks:
             # print("callback")
-            ret_val = self.callbacks["post"](args)
+            ret_val = self.extra_callbacks["post"](args)
             # 比如说有用户打算重复投票
             # print("called back returned")
             # print(args)
@@ -114,8 +143,18 @@ class GenericResource(Resource):
                 for key in self.time_to_string_list:
                     if key in args:
                         args[key] = helpers.timestamp_to_string(args[key])
+
+        # 看看是否需要检查token
+        if self.token_check_callbacks is not None and "put" in self.token_check_callbacks:
+            if not self.token_check_callbacks["put"](args):
+                return {"error": "unauthorized"}, 401 # Unauthorized
+
         # 因为不允许更新id
         id = args.pop("id")
+
+        # 到这里要去掉token, 因为不允许用户写入token
+        args.pop("token")
+
         # result = post_operation.update_post_by_id(id, **args)
         result = common.update_model_by_id(self.model, db, id, **args)
         if result == True:
@@ -134,6 +173,22 @@ class GenericResource(Resource):
 
         if id is None:
             return {"error": "bad request"}, 401
+
+        if "delete" in self.parsers:
+            args = self.parsers["delete"].parse_args()
+            if "delete" in self.accepted_variable_dict:
+                helpers.clean_arguments(args, self.accepted_variable_dict["delete"])
+            # 进行时间处理
+            if self.time_to_string_list is not None:
+                for key in self.time_to_string_list:
+                    if key in args:
+                        args[key] = helpers.timestamp_to_string(args[key])
+
+        # 看看是否需要检查token
+        if self.token_check_callbacks is not None and "delete" in self.token_check_callbacks:
+            if not self.token_check_callbacks["delete"](args):
+                return {"error": "unauthorized"}, 401 # Unauthorized
+
         result = common.delete_from_db(db, self.model, id)
         if result == True:
             return {"status": "deleted"}, 200
