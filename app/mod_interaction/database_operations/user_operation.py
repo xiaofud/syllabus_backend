@@ -16,3 +16,4 @@ def get_user_by_id(id):
 
 def update_user_by_id(id, **kwargs):
     return common.update_model_by_id(User, db, id, **kwargs)
+

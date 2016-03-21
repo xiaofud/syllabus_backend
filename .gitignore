@@ -9,3 +9,6 @@ app/mod_hello_blueprint/
 
 # config file
 config.conf
+
+# testing stuff
+connect_to_db.sh

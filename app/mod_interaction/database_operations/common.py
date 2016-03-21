@@ -4,7 +4,9 @@ __author__ = 'smallfly'
 # 一些错误常量
 ERROR_NOT_FOUND = 1
 ERROR_COMMIT_FAILED = 2
+ERROR_USER_ID_CONFLICT = 3  # 要删除的资源的发布者和执行删除的人不对
 
+from app.mod_interaction.models import User
 
 # 一些通用操作
 def query_by_id(model, id_):
@@ -29,12 +31,21 @@ def add_to_db(db, thing):
         db.session.rollback()
         return False, ERROR_COMMIT_FAILED
 
-def update_model_by_id(model, db, id, **kwargs):
+def update_model_by_id(model, db, id, uid, **kwargs):
     # 先找到对应的数据库记录
     thing = query_by_id(model, id)
     # 不存在该用户
     if thing is None:
         return False, ERROR_NOT_FOUND
+
+    # 有可能寻找的用户数据, 所以这里需要判别一下
+    if hasattr(thing, "uid"):
+        if thing.uid != uid:
+            return False, ERROR_USER_ID_CONFLICT
+    else:
+        if id != uid:
+            return False, ERROR_USER_ID_CONFLICT
+
     attrs = list()
     for attr in dir(thing):
         if not attr.startswith("__") and not attr.startswith("_"):
@@ -61,11 +72,15 @@ def new_record(db, model, **kwargs):
     else:
         return False
 
-def delete_from_db(db, model, id):
+def delete_from_db(db, model, id, uid):
     thing = query_by_id(model, id)
     # print(thing)
     if thing is None:
         return False, ERROR_NOT_FOUND
+
+    # 检查有没有权限删除
+    if thing.uid != uid:
+        return False, ERROR_USER_ID_CONFLICT
     try:
         db.session.delete(thing)
         db.session.commit()
@@ -74,3 +89,20 @@ def delete_from_db(db, model, id):
         print(e)
         db.session.rollback()
         return False, ERROR_COMMIT_FAILED
+
+def check_token(args):
+    uid = args.get("uid")
+    token = args.get("token")
+    # print(uid, token)
+    if uid is None or token is None:
+        return False
+    if uid is not None and token is not None:
+        user = query_by_id(User, uid)
+        if user is None:
+            return False
+        print("token for {} is {}".format(user.account, user.token))
+        # print("real token {}, input token {}".format(user.token, token))
+        if user.token == token:
+            print("token is right")
+            return True
+    return False

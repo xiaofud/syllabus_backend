@@ -2,6 +2,7 @@
 __author__ = 'smallfly'
 
 from datetime import datetime
+from copy import deepcopy
 
 def clean_arguments(args, accepted):
     """
@@ -10,9 +11,10 @@ def clean_arguments(args, accepted):
     :param accepted: 允许的字段
     :return: None
     """
-    for arg in args:
+    args_for_iteration = deepcopy(args)
+    for arg in args_for_iteration:
         if arg not in accepted:
-            assert isinstance(args, dict)
+            # assert isinstance(args, dict)
             args.pop(arg)
 
 

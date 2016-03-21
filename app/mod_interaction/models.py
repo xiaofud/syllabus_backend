@@ -32,7 +32,7 @@ class User(db.Model):
     valid = db.Column(db.SMALLINT, default=USER_NOT_FORBIDDEN)
 
     # 昵称, 默认为帐号名
-    nickname = db.Column(db.String(20), default=account)
+    nickname = db.Column(db.String(20), default=account, unique=True)
 
     # 性别
     gender = db.Column(db.SMALLINT)
@@ -97,10 +97,12 @@ class Post(db.Model):
     # ========== 关系 ==========
 
     # 这篇文章得到的评论
-    comments = db.relationship("Comment", backref="post")
+    # cascade="all, delete-orphan", 表示删除这个文章的时候将会删除所有与之关联起来的对象
+    comments = db.relationship("Comment", backref="post", cascade="all, delete-orphan")
+
 
     # 这篇文章得到的赞
-    thumb_ups = db.relationship("ThumbUp", backref="post")
+    thumb_ups = db.relationship("ThumbUp", backref="post", cascade="all, delete-orphan")
 
     # ========== 关系 ==========
 

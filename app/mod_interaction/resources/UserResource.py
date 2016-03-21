@@ -3,6 +3,7 @@ __author__ = 'smallfly'
 
 from flask_restful import fields, reqparse
 from app.mod_interaction.models import User
+from app.mod_interaction.database_operations import common
 # from app.mod_interaction.resources import ThumbUpResource
 from app.mod_interaction.resources.GenericResource import GenericResource
 
@@ -20,14 +21,15 @@ structure = {
 # 验证参数
 put_parser = reqparse.RequestParser(trim=True)
 put_parser.add_argument("id", type=int, required=True, location='json')
-# 后面需要token限制
+put_parser.add_argument("uid", type=int, required=True, location="json")
+put_parser.add_argument("token", required=True, location='json')
 put_parser.add_argument("nickname", location='json')
 # 使用时间戳
 put_parser.add_argument("birthday", type=int, location='json')
 put_parser.add_argument("profile", location='json')
 put_parser.add_argument("gender", location='json')
 
-PUT_ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender")
+PUT_ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender", "uid", "token")
 
 INITIAL_KWARGS = {
     GenericResource.MODEL: User,
@@ -43,8 +45,11 @@ INITIAL_KWARGS = {
       "birthday"
     ],
     GenericResource.NOT_ALLOWED_METHODS_LIST: [
-        "delete"
-    ]
+        "delete", "post"
+    ],
+    GenericResource.TOKEN_CHECK_FOR_METHODS_DICT:{
+        "put": common.check_token
+    }
 }
 
 # class UserResource(GenericResource):

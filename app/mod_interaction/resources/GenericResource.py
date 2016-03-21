@@ -56,10 +56,10 @@ class GenericResource(Resource):
 
         # 先检查方法是否可用
         if self.not_allowed_methods is not None and "get" in self.not_allowed_methods:
-            return {"error": "method not allowed"}, 403
+            return {"error": "method not allowed"}, 405
 
         if id is None:
-            return {"error": "bad request"}, 401
+            return {"error": "bad request"}, 400
 
         if "get" in self.parsers:
             args = self.parsers["get"].parse_args()
@@ -70,14 +70,13 @@ class GenericResource(Resource):
                 for key in self.time_to_string_list:
                     if key in args:
                         args[key] = helpers.timestamp_to_string(args[key])
-
-        # 看看是否需要检查token
-        if self.token_check_callbacks is not None and "get" in self.token_check_callbacks:
-            if not self.token_check_callbacks["get"](args):
-                return {"error": "unauthorized"}, 401 # Unauthorized
-
-        # 到这里要去掉token, 因为不允许用户写入token
-        args.pop("token")
+            # 看看是否需要检查token
+            if self.token_check_callbacks is not None and "get" in self.token_check_callbacks:
+                if not self.token_check_callbacks["get"](args):
+                    return {"error": "unauthorized"}, 401 # Unauthorized
+                else:
+                    # 到这里要去掉token, 因为不允许用户写入token
+                    args.pop("token")
 
         thing = common.query_by_id(self.model, id)
         # 没找到的话
@@ -89,7 +88,7 @@ class GenericResource(Resource):
 
         # 先检查方法是否可用
         if self.not_allowed_methods is not None and "post" in self.not_allowed_methods:
-            return {"error": "method not allowed"}, 403
+            return {"error": "method not allowed"}, 405
 
 
 
@@ -103,13 +102,15 @@ class GenericResource(Resource):
                     if key in args:
                         args[key] = helpers.timestamp_to_string(args[key])
 
-        # 看看是否需要检查token
-        if self.token_check_callbacks is not None and "post" in self.token_check_callbacks:
-            if not self.token_check_callbacks["post"](args):
-                return {"error": "unauthorized"}, 401 # Unauthorized
+            # 看看是否需要检查token
+            if self.token_check_callbacks is not None and "post" in self.token_check_callbacks:
+                # print("checking token")
+                # print("input token", args["token"])
+                if not self.token_check_callbacks["post"](args):
+                    return {"error": "unauthorized"}, 401 # Unauthorized
 
-        # 到这里要去掉token, 因为不允许用户写入token
-        args.pop("token")
+            # 到这里要去掉token, 因为不允许用户写入token
+            args.pop("token")
 
         # 调用回调方法
         if self.extra_callbacks is not None and "post" in self.extra_callbacks:
@@ -132,7 +133,7 @@ class GenericResource(Resource):
 
         # 先检查方法是否可用
         if self.not_allowed_methods is not None and "put" in self.not_allowed_methods:
-            return {"error": "method not allowed"}, 403
+            return {"error": "method not allowed"}, 405
 
         if "put" in self.parsers:
             args = self.parsers["put"].parse_args()
@@ -144,35 +145,40 @@ class GenericResource(Resource):
                     if key in args:
                         args[key] = helpers.timestamp_to_string(args[key])
 
-        # 看看是否需要检查token
-        if self.token_check_callbacks is not None and "put" in self.token_check_callbacks:
-            if not self.token_check_callbacks["put"](args):
-                return {"error": "unauthorized"}, 401 # Unauthorized
+            # 看看是否需要检查token
+            if self.token_check_callbacks is not None and "put" in self.token_check_callbacks:
+                print("need to check token")
+                if not self.token_check_callbacks["put"](args):
+                    # print(args["uid"], args["id"], args["token"])
+                    return {"error": "unauthorized"}, 401 # Unauthorized
 
-        # 因为不允许更新id
-        id = args.pop("id")
+            # 因为不允许更新id
+            id = args.pop("id")
 
-        # 到这里要去掉token, 因为不允许用户写入token
-        args.pop("token")
+            # 到这里要去掉token, 因为不允许用户写入token
+            args.pop("token")
 
         # result = post_operation.update_post_by_id(id, **args)
-        result = common.update_model_by_id(self.model, db, id, **args)
+        uid = args.pop("uid")
+        result = common.update_model_by_id(self.model, db, id, uid, **args)
         if result == True:
             return {"status": "updated"}, 200
         else:
             if result[1] == common.ERROR_NOT_FOUND:
                 return {"error": "{} not found".format(self.resource_name)}, 404
-            else:
+            elif result[1] == common.ERROR_COMMIT_FAILED:
                 return {"error": "failed"}, 500 # Internal Server Error
+            elif result[1] == common.ERROR_USER_ID_CONFLICT:
+                return {"error": "kidding me?"}, 401
 
     def delete(self, id=None):
 
         # 先检查方法是否可用
         if self.not_allowed_methods is not None and "delete" in self.not_allowed_methods:
-            return {"error": "method not allowed"}, 403
+            return {"error": "method not allowed"}, 405
 
-        if id is None:
-            return {"error": "bad request"}, 401
+        # if id is None:
+        #     return {"error": "bad request"}, 401
 
         if "delete" in self.parsers:
             args = self.parsers["delete"].parse_args()
@@ -184,17 +190,19 @@ class GenericResource(Resource):
                     if key in args:
                         args[key] = helpers.timestamp_to_string(args[key])
 
-        # 看看是否需要检查token
-        if self.token_check_callbacks is not None and "delete" in self.token_check_callbacks:
-            if not self.token_check_callbacks["delete"](args):
-                return {"error": "unauthorized"}, 401 # Unauthorized
+            # 看看是否需要检查token
+            if self.token_check_callbacks is not None and "delete" in self.token_check_callbacks:
+                if not self.token_check_callbacks["delete"](args):
+                    return {"error": "unauthorized"}, 401 # Unauthorized
 
-        result = common.delete_from_db(db, self.model, id)
-        if result == True:
-            return {"status": "deleted"}, 200
-        else:
-            if result[1] == common.ERROR_NOT_FOUND:
-                return {"error": "{} not found".format(self.resource_name)}, 404
+            result = common.delete_from_db(db, self.model, args["id"], args["uid"])
+            if result == True:
+                return {"status": "deleted"}, 200
             else:
-                return {"error": "failed"}, 500 # Internal Server Error
-
+                if result[1] == common.ERROR_NOT_FOUND:
+                    return {"error": "{} not found".format(self.resource_name)}, 404
+                elif result[1] == common.ERROR_COMMIT_FAILED:
+                    return {"error": "failed"}, 500 # Internal Server Error
+                elif result[1] == common.ERROR_USER_ID_CONFLICT:
+                    return {"error": "kidding me?"}, 401
+        return {"error": "bad request"}, 400
