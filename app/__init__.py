@@ -30,6 +30,13 @@ from app.mod_interaction.models import *
 def generate_test_data():
     # 一些测试数据
 
+    import json
+    photo_list = {
+        "1": "https://xiaofud.me/img/img0082.jpg",
+        "2": "https://xiaofud.me/img/img0082.jpg"
+    }
+    photo_list_json = json.dumps(photo_list, ensure_ascii=True)
+
     for i in range(10):
 
         user_info = {
@@ -45,11 +52,12 @@ def generate_test_data():
         db.session.commit()
 
         post_info = {
-            "post_type": user.id,
-            "uid": 1,
+            "post_type": 1,
+            "uid": user.id,
             "title": "this is title",
             "content": "this is content",
-            "description": "this is description"
+            "description": "this is description",
+            "photo_list_json": photo_list_json
         }
 
         post = Post(**post_info)
@@ -69,7 +77,7 @@ def generate_test_data():
 
         like_info = {
             "uid": user.id,
-            "post_id": post.id
+            "post_id": 1
         }
 
         like = ThumbUp(**like_info)

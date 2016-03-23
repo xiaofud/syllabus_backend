@@ -5,9 +5,10 @@ from flask_restful import fields, reqparse
 from app.mod_interaction.models import User
 from app.mod_interaction.database_operations import common
 # from app.mod_interaction.resources import ThumbUpResource
-from app.mod_interaction.resources.GenericResource import GenericResource
+from app.mod_interaction.resources.GenericSingleResource import GenericSingleResource
+from app.mod_interaction.resources.GenericMultipleResource import  GenericMultipleResource
 
-structure = {
+SINGLE_USER_STRUCTURE = {
     "id": fields.Integer,
     "account": fields.String,
     "nickname": fields.String,
@@ -29,27 +30,52 @@ put_parser.add_argument("birthday", type=int, location='json')
 put_parser.add_argument("profile", location='json')
 put_parser.add_argument("gender", location='json')
 
-PUT_ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender", "uid", "token")
+SINGLE_USER_PUT_ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender", "uid", "token")
 
-INITIAL_KWARGS = {
-    GenericResource.MODEL: User,
-    GenericResource.PARSERS_FOR_METHOD: {
+SINGLE_USER_INITIAL_KWARGS = {
+    GenericSingleResource.MODEL: User,
+    GenericSingleResource.PARSERS_FOR_METHOD: {
         "put": put_parser
     },
-    GenericResource.MARSHAL_STRUCTURE: structure,
-    GenericResource.RESOURCE_NAME: "user",
-    GenericResource.ACCEPTED_VARIABLE_DICT: {
-        "put": PUT_ACCEPT_VARIABLES
+    GenericSingleResource.MARSHAL_STRUCTURE: SINGLE_USER_STRUCTURE,
+    GenericSingleResource.RESOURCE_NAME: "user",
+    GenericSingleResource.ACCEPTED_VARIABLE_DICT: {
+        "put": SINGLE_USER_PUT_ACCEPT_VARIABLES
     },
-    GenericResource.TIMESTAMP_TO_STRING_LIST: [
+    GenericSingleResource.TIMESTAMP_TO_STRING_LIST: [
       "birthday"
     ],
-    GenericResource.NOT_ALLOWED_METHODS_LIST: [
+    GenericSingleResource.NOT_ALLOWED_METHODS_LIST: [
         "delete", "post"
     ],
-    GenericResource.TOKEN_CHECK_FOR_METHODS_DICT:{
+    GenericSingleResource.TOKEN_CHECK_FOR_METHODS_DICT:{
         "put": common.check_token
     }
+}
+
+# 获取用户列表
+
+get_multiple_users_parser = reqparse.RequestParser(trim=True)
+get_multiple_users_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, location="args")
+get_multiple_users_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
+get_multiple_users_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
+
+
+
+# 这里不需要单独写一个多用户的 marshal 结构, 解释如下
+# https://github.com/flask-restful/flask-restful/issues/300
+# MULTIPLE_USERS_STRUCTURE = {
+#     "user_list": fields.List(fields.Nested(SINGLE_USER_STRUCTURE))
+#     # "user": fields.Nested(SINGLE_USER_STRUCTURE)
+# }
+
+MULTIPLE_USERS_INITIAL_KWARGS = {
+    GenericMultipleResource.MARSHAL_STRUCTURE: SINGLE_USER_STRUCTURE,
+    GenericMultipleResource.MODEL: User,
+    GenericMultipleResource.PARSER_FOR_METHODS_DICT: {
+        "get": get_multiple_users_parser
+    },
+    GenericMultipleResource.ENVELOPE: "user_list"
 }
 
 # class UserResource(GenericResource):

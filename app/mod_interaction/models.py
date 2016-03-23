@@ -69,7 +69,7 @@ class Post(db.Model):
     POST_TYPE_TOPIC = 1
 
     # 宣传活动性质的(公众号推文)
-    POST_TYPE_ACTIVITY = 2
+    POST_TYPE_ACTIVITY = 2  # 如果是这种类型的话, 那么客户端处理的时候就要注意把content作为文章的URL
 
     __tablename__ = "posts"
 
@@ -87,6 +87,9 @@ class Post(db.Model):
 
     # 内容
     content = db.Column(db.TEXT)
+
+    # 用户同时上传的图片列表, 存储原始的json数据
+    photo_list_json = db.Column(db.TEXT)
 
     # 发布时间
     post_time = db.Column(db.TIMESTAMP, nullable=False)

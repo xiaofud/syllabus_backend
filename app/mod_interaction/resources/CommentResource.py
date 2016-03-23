@@ -2,11 +2,11 @@
 __author__ = 'smallfly'
 
 from flask_restful import reqparse, fields
-from app.mod_interaction.resources.GenericResource import GenericResource
+from app.mod_interaction.resources.GenericSingleResource import GenericSingleResource
 from app.mod_interaction.database_operations import common
 from app.mod_interaction.models import Comment
 
-structure = {
+SINGLE_COMMENT_STRUCTURE = {
     "id": fields.Integer,
     "post_time": fields.String,
     "comment": fields.String,
@@ -29,20 +29,20 @@ delete_parser.add_argument("uid", required=True, type=int, location="json")
 delete_parser.add_argument("token", required=True, location="json")
 delete_parser.add_argument("id", required=True, type=int, location="json")
 
-INITIAL_KWARGS = {
-    GenericResource.ACCEPTED_VARIABLE_DICT: {
+SINGLE_USER_INITIAL_KWARGS = {
+    GenericSingleResource.ACCEPTED_VARIABLE_DICT: {
         "put": ["id", "post_id", "uid", "comment", "token"],
         "post": ["post_id", "uid", "comment", "token"],
     },
-    GenericResource.MARSHAL_STRUCTURE: structure,
-    GenericResource.MODEL:Comment,
-    GenericResource.RESOURCE_NAME: "comment",
-    GenericResource.PARSERS_FOR_METHOD:{
+    GenericSingleResource.MARSHAL_STRUCTURE: SINGLE_COMMENT_STRUCTURE,
+    GenericSingleResource.MODEL:Comment,
+    GenericSingleResource.RESOURCE_NAME: "comment",
+    GenericSingleResource.PARSERS_FOR_METHOD:{
         "post": post_parser,
         "put": put_parser,
         "delete": delete_parser
     },
-    GenericResource.TOKEN_CHECK_FOR_METHODS_DICT:{
+    GenericSingleResource.TOKEN_CHECK_FOR_METHODS_DICT:{
         "post": common.check_token,
         "put": common.check_token,
         "delete": common.check_token

@@ -6,7 +6,7 @@ from app.mod_interaction.database_operations import common
 from app.mod_interaction.resources import helpers
 from app import db
 
-class GenericResource(Resource):
+class GenericSingleResource(Resource):
     """
     通用形的Resource
     """
@@ -39,17 +39,25 @@ class GenericResource(Resource):
     # 检测token
     TOKEN_CHECK_FOR_METHODS_DICT = "TOKEN_CHECK_FOR_METHODS_DICT"
 
+    # 获取数据的函数
+    # 接口声明
+    # def get_resource(model, id, **kwargs):
+    #     pass
+    RESOURCE_GETTER = "RESOURCE_GETTER"
+
+
 
     def __init__(self, **kwargs):
-        self.accepted_variable_dict = kwargs[GenericResource.ACCEPTED_VARIABLE_DICT]
-        self.model = kwargs[GenericResource.MODEL]
-        self.resource_name = kwargs[GenericResource.RESOURCE_NAME]
-        self.marshal_structure = kwargs[GenericResource.MARSHAL_STRUCTURE]
-        self.parsers = kwargs[GenericResource.PARSERS_FOR_METHOD]
-        self.time_to_string_list = kwargs.pop(GenericResource.TIMESTAMP_TO_STRING_LIST, None)
-        self.not_allowed_methods = kwargs.pop(GenericResource.NOT_ALLOWED_METHODS_LIST, None)
-        self.extra_callbacks = kwargs.pop(GenericResource.EXTRA_CALLBACKS_FOR_METHODS_DICT, None)
-        self.token_check_callbacks = kwargs.pop(GenericResource.TOKEN_CHECK_FOR_METHODS_DICT, None)
+        self.accepted_variable_dict = kwargs[GenericSingleResource.ACCEPTED_VARIABLE_DICT]
+        self.model = kwargs[GenericSingleResource.MODEL]
+        self.resource_name = kwargs[GenericSingleResource.RESOURCE_NAME]
+        self.marshal_structure = kwargs[GenericSingleResource.MARSHAL_STRUCTURE]
+        self.parsers = kwargs[GenericSingleResource.PARSERS_FOR_METHOD]
+        self.time_to_string_list = kwargs.pop(GenericSingleResource.TIMESTAMP_TO_STRING_LIST, None)
+        self.not_allowed_methods = kwargs.pop(GenericSingleResource.NOT_ALLOWED_METHODS_LIST, None)
+        self.extra_callbacks = kwargs.pop(GenericSingleResource.EXTRA_CALLBACKS_FOR_METHODS_DICT, None)
+        self.token_check_callbacks = kwargs.pop(GenericSingleResource.TOKEN_CHECK_FOR_METHODS_DICT, None)
+        self.resource_getter = kwargs.pop(GenericSingleResource.RESOURCE_GETTER, None)
 
 
     def get(self, id=None):
@@ -78,8 +86,8 @@ class GenericResource(Resource):
                     # 到这里要去掉token, 因为不允许用户写入token
                     args.pop("token")
 
-        thing = common.query_by_id(self.model, id)
-        # 没找到的话
+
+        thing = common.query_single_by_id(self.model, id)
         if thing is None:
             return {"error": "invalid id {} for {}".format(id, self.resource_name)}, 404
         return marshal(thing, self.marshal_structure), 200

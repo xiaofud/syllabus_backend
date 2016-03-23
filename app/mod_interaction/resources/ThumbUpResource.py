@@ -2,11 +2,12 @@
 __author__ = 'smallfly'
 
 from flask_restful import reqparse, fields
-from app.mod_interaction.resources.GenericResource import GenericResource
+from app.mod_interaction.resources.GenericSingleResource import GenericSingleResource
 from app.mod_interaction.models import ThumbUp
 from app.mod_interaction.database_operations import thumb_up_operation, common
 
-structure = {
+
+SINGLE_THUMB_UP_STRUCTURE = {
     "id": fields.Integer,
     "post_time": fields.String,
     "post_id": fields.Integer,
@@ -24,24 +25,24 @@ delete_parser.remove_argument("post_id")
 
 
 
-INITIAL_KWARGS = {
-    GenericResource.ACCEPTED_VARIABLE_DICT: {
+SINGLE_THUMB_UP_INITIAL_KWARGS = {
+    GenericSingleResource.ACCEPTED_VARIABLE_DICT: {
         "post": ["post_id", "uid", "comment", "token"],
     },
-    GenericResource.MARSHAL_STRUCTURE: structure,
-    GenericResource.MODEL:ThumbUp,
-    GenericResource.RESOURCE_NAME: "like",
-    GenericResource.PARSERS_FOR_METHOD:{
+    GenericSingleResource.MARSHAL_STRUCTURE: SINGLE_THUMB_UP_STRUCTURE,
+    GenericSingleResource.MODEL:ThumbUp,
+    GenericSingleResource.RESOURCE_NAME: "like",
+    GenericSingleResource.PARSERS_FOR_METHOD:{
         "post": post_parser,
         "delete": delete_parser
     },
-    GenericResource.NOT_ALLOWED_METHODS_LIST:[
+    GenericSingleResource.NOT_ALLOWED_METHODS_LIST:[
         "put"
     ],
-    GenericResource.EXTRA_CALLBACKS_FOR_METHODS_DICT:{
+    GenericSingleResource.EXTRA_CALLBACKS_FOR_METHODS_DICT:{
         "post": thumb_up_operation.check_multiple_likes
     },
-    GenericResource.TOKEN_CHECK_FOR_METHODS_DICT:{
+    GenericSingleResource.TOKEN_CHECK_FOR_METHODS_DICT:{
         "post": common.check_token,
         "delete": common.check_token
     }

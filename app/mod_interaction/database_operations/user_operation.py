@@ -8,10 +8,10 @@ from app.mod_interaction.models import User
 from app import db
 
 def get_user_by_id(id):
-    user = common.query_by_id(User, id)
+    user = common.query_single_by_id(User, id)
     if user is None:
         print("user of id {} is None".format(id))
-    return common.query_by_id(User, id)
+    return common.query_single_by_id(User, id)
 
 
 def update_user_by_id(id, **kwargs):

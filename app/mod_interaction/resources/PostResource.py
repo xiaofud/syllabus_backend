@@ -1,19 +1,36 @@
 # coding=utf-8
+
+
 __author__ = 'smallfly'
 
 from flask_restful import fields, reqparse
-from app.mod_interaction.resources.GenericResource import GenericResource
+from app.mod_interaction.resources.GenericSingleResource import GenericSingleResource
+from app.mod_interaction.resources.GenericMultipleResource import GenericMultipleResource
 from app.mod_interaction.database_operations import common
 from app.mod_interaction.models import Post
+# from app.mod_interaction.resources import ThumbUpResource
 
-structure = {
+__thumb_ups_structure = {
+    "id": fields.Integer,   # 该赞的id, 方便用于取消
+    "uid": fields.Integer,  # 点赞的人
+}
+
+__comment_structure = {
+    "id": fields.Integer,   # 评论的id, 用于删除
+    "uid": fields.Integer,  # 发布评论的用户id
+}
+
+SINGLE_POST_STRUCTURE = {
     "id": fields.Integer,
     "post_type": fields.Integer,
     "title": fields.String,
     "content": fields.String,
     "post_time": fields.String,
     "uid": fields.Integer,
-    "description": fields.String
+    "description": fields.String,
+    "thumb_ups": fields.List(fields.Nested(__thumb_ups_structure)),
+    "comments": fields.List(fields.Nested(__comment_structure)),
+    "photo_list_json": fields.String
 }
 
 post_parser = reqparse.RequestParser(trim=True)
@@ -23,6 +40,7 @@ post_parser.add_argument("description", location="json")
 post_parser.add_argument("uid", type=int, required=True, location="json")
 post_parser.add_argument("post_type", type=int, required=True, location="json")
 post_parser.add_argument("token", required=True, location="json")
+post_parser.add_argument("photo_list_json", location="json")
 
 # 需要提交之前修改的id
 put_parser = post_parser.copy()
@@ -34,34 +52,61 @@ delete_parser.add_argument("uid", type=int, required=True, location="json")
 delete_parser.add_argument("id", type=int, required=True, location="json")
 
 # 新的对象的参数
-POST_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "token")
+SINGLE_POST_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "token")
 
 # 用于修改之前post过的数据
-PUT_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "id", "token")
+SINGLE_PUT_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "id", "token")
 
 # POST_RESOURCE_ACCEPTED_VARIABLE_DICT = {
 #     "post": POST_ACCEPT_VARIABLES,
 #     "put": PUT_ACCEPT_VARIABLES
 # }
 
-INITIAL_KWARGS = {
-    GenericResource.ACCEPTED_VARIABLE_DICT: {
-        "post": POST_ACCEPT_VARIABLES,
-        "put": PUT_ACCEPT_VARIABLES
+SINGLE_INITIAL_KWARGS = {
+    GenericSingleResource.ACCEPTED_VARIABLE_DICT: {
+        "post": SINGLE_POST_ACCEPT_VARIABLES,
+        "put": SINGLE_PUT_ACCEPT_VARIABLES
     },
-    GenericResource.MARSHAL_STRUCTURE: structure,
-    GenericResource.PARSERS_FOR_METHOD:{
+    GenericSingleResource.MARSHAL_STRUCTURE: SINGLE_POST_STRUCTURE,
+    GenericSingleResource.PARSERS_FOR_METHOD:{
         "post": post_parser,
         "put": put_parser,
         "delete": delete_parser
     },
-    GenericResource.MODEL: Post,
-    GenericResource.RESOURCE_NAME: "post",
-    GenericResource.TOKEN_CHECK_FOR_METHODS_DICT:{
+    GenericSingleResource.MODEL: Post,
+    GenericSingleResource.RESOURCE_NAME: "post",
+    GenericSingleResource.TOKEN_CHECK_FOR_METHODS_DICT:{
         "post": common.check_token,
         "delete": common.check_token,
         "put": common.check_token
     }
+    ,
+    # GenericResource.RESOURCE_GETTER: common.query_single_by_id
+}
+
+# 获取文章列表
+
+get_multiple_users_parser = reqparse.RequestParser(trim=True)
+get_multiple_users_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, location="args")
+get_multiple_users_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
+get_multiple_users_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
+
+
+
+# 这里不需要单独写一个多用户的 marshal 结构, 解释如下
+# https://github.com/flask-restful/flask-restful/issues/300
+# MULTIPLE_USERS_STRUCTURE = {
+#     "user_list": fields.List(fields.Nested(SINGLE_USER_STRUCTURE))
+#     # "user": fields.Nested(SINGLE_USER_STRUCTURE)
+# }
+
+MULTIPLE_USERS_INITIAL_KWARGS = {
+    GenericMultipleResource.MARSHAL_STRUCTURE: SINGLE_POST_STRUCTURE,
+    GenericMultipleResource.MODEL: Post,
+    GenericMultipleResource.PARSER_FOR_METHODS_DICT: {
+        "get": get_multiple_users_parser
+    },
+    GenericMultipleResource.ENVELOPE: "post_list"
 }
 
 # class PostResource(Resource):

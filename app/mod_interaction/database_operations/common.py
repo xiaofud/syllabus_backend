@@ -1,22 +1,63 @@
 # coding=utf-8
 __author__ = 'smallfly'
 
+# http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
+
 # 一些错误常量
 ERROR_NOT_FOUND = 1
 ERROR_COMMIT_FAILED = 2
 ERROR_USER_ID_CONFLICT = 3  # 要删除的资源的发布者和执行删除的人不对
 
+# query 常量
+QUERY_SORT_TYPE_ASC = 1 # 升序排列
+QUERY_SORT_TYPE_DESC = 2    # 降序排列
+QUERY_ORDER_BY_DEFAULT = "id"   # 默认按照id排序
+QUERY_RESULT_COUNT_DEFAULT = 10 # 默认返回10条数据
+
+QUERY_ATTR_SORT_TYPE = "sort_type"
+QUERY_ATTR_COUNT = "count"
+QUERY_ATTR_ORDER_BY = "order_by"
+
 from app.mod_interaction.models import User
 
 # 一些通用操作
-def query_by_id(model, id_):
+def query_single_by_id(model, id_):
     """
     返回表中主键值为id_的记录
     :param model: 表的模型
     :param id_: 主键
     :return:    记录 或者 None
     """
-    return model.query.filter_by(id=id_).first()
+    # return model.query.filter_by(id=id_).first()
+    # 参考文档
+    return model.query.get(id_)
+
+
+
+def query_multiple(model, **kwargs):
+    # 因为传入的参数里面可能有的是None
+    sorting = kwargs.pop(QUERY_ATTR_SORT_TYPE) or QUERY_SORT_TYPE_DESC  # 降序
+    count = kwargs.pop(QUERY_ATTR_COUNT) or QUERY_RESULT_COUNT_DEFAULT   # 返回的数量
+    order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
+
+    if count <= 0 :
+        count = QUERY_RESULT_COUNT_DEFAULT
+
+    # print(type(order_by))
+
+    if sorting == QUERY_SORT_TYPE_DESC:
+        return model.query.order_by(getattr(model, order_by).desc()).limit(count).all()
+    else:
+        return model.query.order_by(getattr(model, order_by).asc()).limit(count).all()
+
+
+# def query(model, **kwargs):
+#     if "id" in kwargs:
+#         # 查找单个数据
+#         return query_single_by_id(model, kwargs["id"])
+#     if "count" in kwargs:
+#         # 查找多个
+#         return model.query.order_by(model.id.desc()).limit(int(kwargs["count"])).all()
 
 def fetch_all(model):
     return model.query.all()
@@ -33,7 +74,7 @@ def add_to_db(db, thing):
 
 def update_model_by_id(model, db, id, uid, **kwargs):
     # 先找到对应的数据库记录
-    thing = query_by_id(model, id)
+    thing = query_single_by_id(model, id)
     # 不存在该用户
     if thing is None:
         return False, ERROR_NOT_FOUND
@@ -73,7 +114,7 @@ def new_record(db, model, **kwargs):
         return False
 
 def delete_from_db(db, model, id, uid):
-    thing = query_by_id(model, id)
+    thing = query_single_by_id(model, id)
     # print(thing)
     if thing is None:
         return False, ERROR_NOT_FOUND
@@ -97,7 +138,7 @@ def check_token(args):
     if uid is None or token is None:
         return False
     if uid is not None and token is not None:
-        user = query_by_id(User, uid)
+        user = query_single_by_id(User, uid)
         if user is None:
             return False
         print("token for {} is {}".format(user.account, user.token))
