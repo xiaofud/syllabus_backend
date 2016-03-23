@@ -16,6 +16,7 @@ from app.mod_interaction.resources import CommentResource
 from app.mod_interaction.resources import ThumbUpResource
 from app.mod_interaction.resources.GenericSingleResource import GenericSingleResource
 from app.mod_interaction.resources.GenericMultipleResource import GenericMultipleResource
+from app.mod_interaction.resources.GenericOneToManyRelationResource import GenericOneToManyRelationResource
 
 from flask_restful import Api
 
@@ -49,6 +50,11 @@ api.add_resource(GenericSingleResource, "/like/<int:id>", "/like", endpoint="lik
 api.add_resource(GenericMultipleResource, "/users", "/users/", endpoint="users", resource_class_kwargs=UserResource.MULTIPLE_USERS_INITIAL_KWARGS)
 api.add_resource(GenericMultipleResource, "/posts", "/posts/", endpoint="posts", resource_class_kwargs=PostResource.MULTIPLE_USERS_INITIAL_KWARGS)
 # ================= 获取多个资源 =================
+
+# ================= 寻找一对多的资源 =================
+# curl "localhost:8080/interaction/api/v2/post_comments?field=uid&value=1"
+api.add_resource(GenericOneToManyRelationResource, "/post_comments", "/post_comments/", endpoint="post_comments", resource_class_kwargs=CommentResource.QUERY_COMMENTS_FOR_POST_INITIAL_KWARGS)
+# ================= 寻找一对多的资源 =================
 
 
 

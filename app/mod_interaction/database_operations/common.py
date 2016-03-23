@@ -17,8 +17,16 @@ QUERY_RESULT_COUNT_DEFAULT = 10 # 默认返回10条数据
 QUERY_ATTR_SORT_TYPE = "sort_type"
 QUERY_ATTR_COUNT = "count"
 QUERY_ATTR_ORDER_BY = "order_by"
+QUERY_ATTR_FILTER_FIELD = "field"
+QUERY_ATTR_FILTER_VALUE = "value"
 
 from app.mod_interaction.models import User
+
+def try_to_int(the_str):
+    try:
+        return int(the_str)
+    except ValueError as e:
+        return False
 
 # 一些通用操作
 def query_single_by_id(model, id_):
@@ -43,12 +51,42 @@ def query_multiple(model, **kwargs):
     if count <= 0 :
         count = QUERY_RESULT_COUNT_DEFAULT
 
-    # print(type(order_by))
+    if not hasattr(model, order_by):
+        return False
+
 
     if sorting == QUERY_SORT_TYPE_DESC:
         return model.query.order_by(getattr(model, order_by).desc()).limit(count).all()
     else:
         return model.query.order_by(getattr(model, order_by).asc()).limit(count).all()
+
+def query_one_to_many(model, **kwargs):
+    # 因为传入的参数里面可能有的是None
+    sorting = kwargs.pop(QUERY_ATTR_SORT_TYPE) or QUERY_SORT_TYPE_DESC  # 降序
+    count = kwargs.pop(QUERY_ATTR_COUNT) or QUERY_RESULT_COUNT_DEFAULT   # 返回的数量
+    order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
+
+    filed = kwargs.pop(QUERY_ATTR_FILTER_FIELD) or None
+    value = kwargs.pop(QUERY_ATTR_FILTER_VALUE) or None
+
+    # 如果可以转换成数字就转换为数字
+    tmp = try_to_int(value)
+    if tmp != False:
+        value = tmp
+
+    if filed is None:
+        return False
+
+    if not hasattr(model, filed) or not hasattr(model, order_by):
+        # print("model has not ", filed)
+        return False
+
+    # print(model.__tablename__, " has ", filed)
+
+    if sorting == QUERY_SORT_TYPE_DESC:
+        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).desc()).limit(count).all()
+    else:
+        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).asc()).limit(count).all()
 
 
 # def query(model, **kwargs):

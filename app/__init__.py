@@ -66,7 +66,7 @@ def generate_test_data():
         db.session.commit()
 
         comment_info = {
-            "post_id": post.id,
+            "post_id": 1,
             "uid": user.id,
             "comment": "comment"
         }
@@ -84,5 +84,6 @@ def generate_test_data():
 
         db.session.add(like)
         db.session.commit()
+
 
 generate_test_data()
