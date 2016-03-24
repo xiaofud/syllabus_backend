@@ -13,12 +13,14 @@ QUERY_SORT_TYPE_ASC = 1 # 升序排列
 QUERY_SORT_TYPE_DESC = 2    # 降序排列
 QUERY_ORDER_BY_DEFAULT = "id"   # 默认按照id排序
 QUERY_RESULT_COUNT_DEFAULT = 10 # 默认返回10条数据
+QUERY_OFFSET_DEFAULT = 1    # 默认的偏移量
 
 QUERY_ATTR_SORT_TYPE = "sort_type"
 QUERY_ATTR_COUNT = "count"
 QUERY_ATTR_ORDER_BY = "order_by"
 QUERY_ATTR_FILTER_FIELD = "field"
 QUERY_ATTR_FILTER_VALUE = "value"
+QUERY_ATTR_OFFSET = "offset"
 
 from app.mod_interaction.models import User
 
@@ -47,6 +49,14 @@ def query_multiple(model, **kwargs):
     sorting = kwargs.pop(QUERY_ATTR_SORT_TYPE) or QUERY_SORT_TYPE_DESC  # 降序
     count = kwargs.pop(QUERY_ATTR_COUNT) or QUERY_RESULT_COUNT_DEFAULT   # 返回的数量
     order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
+    offset = kwargs.pop(QUERY_ATTR_OFFSET) or QUERY_OFFSET_DEFAULT  # 偏移量
+
+    tmp = try_to_int(offset)
+    if tmp != False:
+        offset = tmp
+
+    if offset < 1 :
+        offset = 1
 
     if count <= 0 :
         count = QUERY_RESULT_COUNT_DEFAULT
@@ -56,16 +66,16 @@ def query_multiple(model, **kwargs):
 
 
     if sorting == QUERY_SORT_TYPE_DESC:
-        return model.query.order_by(getattr(model, order_by).desc()).limit(count).all()
+        return model.query.order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
     else:
-        return model.query.order_by(getattr(model, order_by).asc()).limit(count).all()
+        return model.query.order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
 
 def query_one_to_many(model, **kwargs):
     # 因为传入的参数里面可能有的是None
     sorting = kwargs.pop(QUERY_ATTR_SORT_TYPE) or QUERY_SORT_TYPE_DESC  # 降序
     count = kwargs.pop(QUERY_ATTR_COUNT) or QUERY_RESULT_COUNT_DEFAULT   # 返回的数量
     order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
-
+    offset = kwargs.pop(QUERY_ATTR_OFFSET) or QUERY_OFFSET_DEFAULT  # 偏移量
     filed = kwargs.pop(QUERY_ATTR_FILTER_FIELD) or None
     value = kwargs.pop(QUERY_ATTR_FILTER_VALUE) or None
 
@@ -73,6 +83,10 @@ def query_one_to_many(model, **kwargs):
     tmp = try_to_int(value)
     if tmp != False:
         value = tmp
+
+    tmp = try_to_int(offset)
+    if tmp != False:
+        offset = tmp
 
     if filed is None:
         return False
@@ -83,10 +97,12 @@ def query_one_to_many(model, **kwargs):
 
     # print(model.__tablename__, " has ", filed)
 
+    # print(offset)
+
     if sorting == QUERY_SORT_TYPE_DESC:
-        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).desc()).limit(count).all()
+        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
     else:
-        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).asc()).limit(count).all()
+        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
 
 
 # def query(model, **kwargs):

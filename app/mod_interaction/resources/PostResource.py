@@ -90,6 +90,7 @@ get_multiple_users_parser = reqparse.RequestParser(trim=True)
 get_multiple_users_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, location="args")
 get_multiple_users_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
 get_multiple_users_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
+get_multiple_users_parser.add_argument(common.QUERY_ATTR_OFFSET, type=int, location="args")
 
 
 

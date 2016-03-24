@@ -62,6 +62,7 @@ get_comments_parser.add_argument(common.QUERY_ATTR_FILTER_VALUE, required=True, 
 get_comments_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, location="args")
 get_comments_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
 get_comments_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
+get_comments_parser.add_argument(common.QUERY_ATTR_OFFSET, type=int, location="args")
 
 
 QUERY_COMMENTS_FOR_POST_INITIAL_KWARGS = {
