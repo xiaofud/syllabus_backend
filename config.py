@@ -9,6 +9,9 @@ config["DEBUG"] = True
 # Define the application directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 config["BASE_DIR"] = BASE_DIR
+# 保存更新信息的文件夹
+config["VERSION_DIR"] = BASE_DIR + os.path.sep + "versions"
+config["BANNER_DIR"] = BASE_DIR + os.path.sep + "banners"
 
 
 # private settings

@@ -47,15 +47,15 @@ put_parser = post_parser.copy()
 put_parser.add_argument("id", type=int, required=True, location="json")
 
 delete_parser = reqparse.RequestParser(trim=True)
-delete_parser.add_argument("token", required=True, location="json")
-delete_parser.add_argument("uid", type=int, required=True, location="json")
-delete_parser.add_argument("id", type=int, required=True, location="json")
+delete_parser.add_argument("token", required=True, location="args")
+delete_parser.add_argument("uid", type=int, required=True, location="args")
+delete_parser.add_argument("id", type=int, required=True, location="args")
 
 # 新的对象的参数
-SINGLE_POST_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "token")
+SINGLE_POST_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "token", "photo_list_json")
 
 # 用于修改之前post过的数据
-SINGLE_PUT_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "id", "token")
+SINGLE_PUT_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "id", "token", "photo_list_json")
 
 # POST_RESOURCE_ACCEPTED_VARIABLE_DICT = {
 #     "post": POST_ACCEPT_VARIABLES,

@@ -15,6 +15,7 @@ SINGLE_USER_STRUCTURE = {
     "gender": fields.Integer,
     "birthday": fields.String,
     "profile": fields.String,
+    "image": fields.String
     # "token": fields.String
     # "thumb_ups": fields.List(fields.Nested(ThumbUpResource.structure))
 }
@@ -29,6 +30,9 @@ put_parser.add_argument("nickname", location='json')
 put_parser.add_argument("birthday", type=int, location='json')
 put_parser.add_argument("profile", location='json')
 put_parser.add_argument("gender", location='json')
+
+# 头像
+put_parser.add_argument("image", location="json")
 
 SINGLE_USER_PUT_ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender", "uid", "token")
 

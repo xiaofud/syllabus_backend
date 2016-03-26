@@ -9,12 +9,16 @@ SUPER_USERS = [
     "13yjli3"
 ]
 
+VISIBILITY_VISIBLE = 1
+VISIBILITY_INVISIBLE = 2
+
 # 用户表
 class User(db.Model):
 
     # 性别常量
     GENDER_FEMALE = 0
     GENDER_MALE = 1
+    GENDER_UNKNOWN = -1
 
     USER_NOT_FORBIDDEN = 1
     USER_FORBIDDEN = 0
@@ -35,7 +39,7 @@ class User(db.Model):
     nickname = db.Column(db.String(20), default=account, unique=True)
 
     # 性别
-    gender = db.Column(db.SMALLINT)
+    gender = db.Column(db.SMALLINT, default=GENDER_UNKNOWN)
 
     # 个人说明
     profile = db.Column(db.String(40))
@@ -45,6 +49,12 @@ class User(db.Model):
 
     # token
     token = db.Column(db.String(6), default="000000")
+
+    # 头像地址
+    image = db.Column(db.String(128))
+
+    # 是否对外部可见
+    visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
 
     # ========== 关系 ==========
 
@@ -97,6 +107,9 @@ class Post(db.Model):
     # 发布者(外键)
     uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
+    # 是否对外部可见
+    visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
+
     # ========== 关系 ==========
 
     # 这篇文章得到的评论
@@ -133,6 +146,9 @@ class Comment(db.Model):
     # 评论的发布者
     uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
+    # 是否对外部可见
+    visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
+
     def __repr__(self):
         return "<Comment {username}> - {content}".format(username=self.user.account, content=self.comment)
 
@@ -153,6 +169,9 @@ class ThumbUp(db.Model):
 
     # 点赞的人
     uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    # 是否对外部可见
+    visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
 
     def __repr__(self):
         return "<ThumbUp from {} to {}>".format(self.user.account, self.post.title)

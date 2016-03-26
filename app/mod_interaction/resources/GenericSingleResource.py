@@ -155,7 +155,7 @@ class GenericSingleResource(Resource):
 
             # 看看是否需要检查token
             if self.token_check_callbacks is not None and "put" in self.token_check_callbacks:
-                print("need to check token")
+                # print("need to check token")
                 if not self.token_check_callbacks["put"](args):
                     # print(args["uid"], args["id"], args["token"])
                     return {"error": "unauthorized"}, 401 # Unauthorized

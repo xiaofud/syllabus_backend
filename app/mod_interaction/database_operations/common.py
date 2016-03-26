@@ -3,6 +3,7 @@ __author__ = 'smallfly'
 
 # http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
+
 # 一些错误常量
 ERROR_NOT_FOUND = 1
 ERROR_COMMIT_FAILED = 2
@@ -22,7 +23,7 @@ QUERY_ATTR_FILTER_FIELD = "field"
 QUERY_ATTR_FILTER_VALUE = "value"
 QUERY_ATTR_OFFSET = "offset"
 
-from app.mod_interaction.models import User
+from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE
 
 def try_to_int(the_str):
     try:
@@ -38,9 +39,18 @@ def query_single_by_id(model, id_):
     :param id_: 主键
     :return:    记录 或者 None
     """
-    # return model.query.filter_by(id=id_).first()
+    return model.query.filter_by(id=id_).filter_by(visibility=VISIBILITY_VISIBLE).first()
+
     # 参考文档
-    return model.query.get(id_)
+    # return model.query.get(id_)
+
+def query_single_by_filed(model, field, value):
+    if not hasattr(model, field):
+        return None
+    kwargs = {
+        field: value
+    }
+    return model.query.filter_by(**kwargs).filter_by(visibility=VISIBILITY_VISIBLE).first()
 
 
 
@@ -66,9 +76,9 @@ def query_multiple(model, **kwargs):
 
 
     if sorting == QUERY_SORT_TYPE_DESC:
-        return model.query.order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
+        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
     else:
-        return model.query.order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
+        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
 
 def query_one_to_many(model, **kwargs):
     # 因为传入的参数里面可能有的是None
@@ -100,9 +110,9 @@ def query_one_to_many(model, **kwargs):
     # print(offset)
 
     if sorting == QUERY_SORT_TYPE_DESC:
-        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
+        return model.query.filter(getattr(model, filed) == value).filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
     else:
-        return model.query.filter(getattr(model, filed) == value).order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
+        return model.query.filter(getattr(model, filed) == value).filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
 
 
 # def query(model, **kwargs):
@@ -168,6 +178,14 @@ def new_record(db, model, **kwargs):
         return False
 
 def delete_from_db(db, model, id, uid):
+    """
+    伪删除, 把数据的 visibility 改为 INVISIBLE
+    :param db:
+    :param model:
+    :param id:
+    :param uid:
+    :return:
+    """
     thing = query_single_by_id(model, id)
     # print(thing)
     if thing is None:
@@ -177,7 +195,11 @@ def delete_from_db(db, model, id, uid):
     if thing.uid != uid:
         return False, ERROR_USER_ID_CONFLICT
     try:
-        db.session.delete(thing)
+        if hasattr(thing, "visibility"):
+            thing.visibility = VISIBILITY_INVISIBLE
+            db.session.add(thing)
+        else:   # 确实删除
+            db.session.delete(thing)
         db.session.commit()
         return True
     except Exception as e:
@@ -198,6 +220,8 @@ def check_token(args):
         print("token for {} is {}".format(user.account, user.token))
         # print("real token {}, input token {}".format(user.token, token))
         if user.token == token:
-            print("token is right")
+            # print("token is right")
             return True
+        else:
+            print("token wrong")
     return False

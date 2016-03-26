@@ -5,6 +5,7 @@ __author__ = 'smallfly'
 
 from flask import Blueprint
 from app.mod_credit.resources.class_member_resource import ClassMember
+from app.mod_credit.resources.syllabus_resource import SyllabusResource
 from flask_restful import Api
 
 credit_blueprint = Blueprint("credit_blueprint", __name__, url_prefix="/credit")
@@ -12,4 +13,4 @@ credit_blueprint = Blueprint("credit_blueprint", __name__, url_prefix="/credit")
 api = Api(credit_blueprint, prefix="/api/v2")
 
 api.add_resource(ClassMember, "/member", "/member/", endpoint="member")
-
+api.add_resource(SyllabusResource, "/syllabus", "/syllabus/", endpoint="syllabus")

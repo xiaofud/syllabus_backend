@@ -17,6 +17,8 @@ from app.mod_interaction.resources import ThumbUpResource
 from app.mod_interaction.resources.GenericSingleResource import GenericSingleResource
 from app.mod_interaction.resources.GenericMultipleResource import GenericMultipleResource
 from app.mod_interaction.resources.GenericOneToManyRelationResource import GenericOneToManyRelationResource
+from app.mod_interaction.resources.VersionResource import VersionResource
+from app.mod_interaction.resources.BannerResource import BannerResource
 
 from flask_restful import Api
 
@@ -29,8 +31,8 @@ api = Api(interaction_blueprint, prefix="/api/v2")
 api.add_resource(GenericSingleResource, "/user/<int:id>", "/user", endpoint="user", resource_class_kwargs=UserResource.SINGLE_USER_INITIAL_KWARGS)
 
 # curl localhost:8080/interaction/api/v2/post/1
-# curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X POST -d '{"title": "testing_title", "content": "haha", "description": "click me", "uid": 1, "post_type": 1}'
-# curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X PUT -d '{"title": "testing_title", "content": "haha", "id": 2, "description": "do not click me", "uid": 1, "post_type": 1}'
+# curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X POST -d '{"title": "testing_title", "content": "haha", "description": "click me", "uid": 1, "post_type": 1, "token": "000000"}'
+# curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X PUT -d '{"title": "testing_title", "content": "haha", "id": 2, "description": "do not click me", "uid": 1, "post_type": 1, "token": "000000"}'
 # api.add_resource(PostResource, "/post/<int:id>", "/post", endpoint="post")
 api.add_resource(GenericSingleResource, "/post/<int:id>", "/post", endpoint="post", resource_class_kwargs=PostResource.SINGLE_INITIAL_KWARGS)
 
@@ -56,6 +58,9 @@ api.add_resource(GenericMultipleResource, "/posts", "/posts/", endpoint="posts",
 # curl "localhost:8080/interaction/api/v2/post_comments?field=uid&value=1&offset=2&count=1&sort_type=2&order_by=id"
 api.add_resource(GenericOneToManyRelationResource, "/post_comments", "/post_comments/", endpoint="post_comments", resource_class_kwargs=CommentResource.QUERY_COMMENTS_FOR_POST_INITIAL_KWARGS)
 # ================= 寻找一对多的资源 =================
+
+api.add_resource(VersionResource, "/version", "/version/", endpoint="version")
+api.add_resource(BannerResource, "/banner", "/banner/", endpoint="banner")
 
 
 
