@@ -1,10 +1,9 @@
 # coding=utf-8
 __author__ = 'smallfly'
 
-from flask_restful import fields, reqparse
+from flask_restful import fields, reqparse, Resource, marshal
 from app.mod_interaction.models import User
 from app.mod_interaction.database_operations import common
-# from app.mod_interaction.resources import ThumbUpResource
 from app.mod_interaction.resources.GenericSingleResource import GenericSingleResource
 from app.mod_interaction.resources.GenericMultipleResource import  GenericMultipleResource
 
@@ -82,6 +81,22 @@ MULTIPLE_USERS_INITIAL_KWARGS = {
     },
     GenericMultipleResource.ENVELOPE: "user_list"
 }
+
+class CompatibleUserResource(Resource):
+    """
+    因为之前服务器上使用的是用户账号来获取和修改数据, 所以这里要写一个向前兼容的api
+    """
+
+    # account 那里一定要用urlencode编码过后才能加在url后
+    def get(self, account=None):
+        if account is None:
+            return {"error": "name required in the query parameter"}, 400
+        # print(name)
+        # input()
+        user = common.query_single_by_filed(User, "account", account)
+        if user is None:
+            return {"error": "no user's account is {}".format(account)}, 404
+        return marshal(user, SINGLE_USER_STRUCTURE)
 
 # class UserResource(GenericResource):
 #

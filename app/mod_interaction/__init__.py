@@ -19,6 +19,7 @@ from app.mod_interaction.resources.GenericMultipleResource import GenericMultipl
 from app.mod_interaction.resources.GenericOneToManyRelationResource import GenericOneToManyRelationResource
 from app.mod_interaction.resources.VersionResource import VersionResource
 from app.mod_interaction.resources.BannerResource import BannerResource
+from app.mod_interaction.resources.UserResource import CompatibleUserResource
 
 from flask_restful import Api
 
@@ -29,6 +30,8 @@ api = Api(interaction_blueprint, prefix="/api/v2")
 # curl --header "Content-type: application/json" localhost:8080/interaction/api/v2/user -X PUT -d '{"id": 1, "birthday": "819648000", "nickname": "拂晓", "gender": 1, "profile": "hello world", "token": "000000", "uid": 1}'
 # curl -i -X DELETE localhost:8080/interaction/api/v2/user/1
 api.add_resource(GenericSingleResource, "/user/<int:id>", "/user", endpoint="user", resource_class_kwargs=UserResource.SINGLE_USER_INITIAL_KWARGS)
+# 兼容之前课表的接口
+api.add_resource(CompatibleUserResource, "/compatible_user/<account>", endpoint="compatible_user")
 
 # curl localhost:8080/interaction/api/v2/post/1
 # curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X POST -d '{"title": "testing_title", "content": "haha", "description": "click me", "uid": 1, "post_type": 1, "token": "000000"}'
