@@ -33,7 +33,7 @@ put_parser.add_argument("gender", location='json')
 # 头像
 put_parser.add_argument("image", location="json")
 
-SINGLE_USER_PUT_ACCEPT_VARIABLES = ("id", "nickname", "birthday", "profile", "gender", "uid", "token")
+SINGLE_USER_PUT_ACCEPT_VARIABLES = ("image", "id", "nickname", "birthday", "profile", "gender", "uid", "token")
 
 SINGLE_USER_INITIAL_KWARGS = {
     GenericSingleResource.MODEL: User,

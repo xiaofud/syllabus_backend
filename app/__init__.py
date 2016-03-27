@@ -35,10 +35,44 @@ def generate_test_data():
 
     import json
     photo_list = {
-        "1": "https://xiaofud.me/img/img0082.jpg",
-        "2": "https://xiaofud.me/img/img0082.jpg"
+        "photo_list":[
+            {
+                "size_big": "https://xiaofud.me/img/746ff7890c10e100.jpg",
+                "size_small": "https://xiaofud.me/img/746ff7890c10e100.jpg"
+            },
+            {
+                "size_big": "https://xiaofud.me/img/img0082.jpg",
+                "size_small": "https://xiaofud.me/img/img0082.jpg"
+            }
+        ]
     }
     photo_list_json = json.dumps(photo_list, ensure_ascii=True)
+
+    xiaofud = {
+        "account": "14xfdeng",
+        "nickname": "晓拂",
+        # "birthday": "1995-12-23",
+        "gender": 1,
+        "profile": "hello world"
+    }
+
+    user = User(**xiaofud)
+    db.session.add(user)
+    db.session.commit()
+
+    post_info = {
+            "post_type": 1,
+            "uid": user.id,
+            # "title": "this is title",
+            "content": "this is content",
+            "description": "this is description",
+            "photo_list_json": photo_list_json
+    }
+
+    post = Post(**post_info)
+    db.session.add(post)
+    db.session.commit()
+
 
     for i in range(10):
 
@@ -57,7 +91,7 @@ def generate_test_data():
         post_info = {
             "post_type": 1,
             "uid": user.id,
-            "title": "this is title",
+            # "title": "this is title",
             "content": "this is content",
             "description": "this is description",
             "photo_list_json": photo_list_json

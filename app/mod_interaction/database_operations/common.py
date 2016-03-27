@@ -143,6 +143,8 @@ def update_model_by_id(model, db, id, uid, **kwargs):
     if thing is None:
         return False, ERROR_NOT_FOUND
 
+    # print(kwargs)
+
     # 有可能寻找的用户数据, 所以这里需要判别一下
     if hasattr(thing, "uid"):
         if thing.uid != uid:

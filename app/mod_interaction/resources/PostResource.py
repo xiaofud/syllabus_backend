@@ -20,13 +20,19 @@ __comment_structure = {
     "uid": fields.Integer,  # 发布评论的用户id
 }
 
+__user_structure = {
+    "id": fields.Integer,
+    "image": fields.String,
+    "nickname": fields.String
+}
+
 SINGLE_POST_STRUCTURE = {
     "id": fields.Integer,
     "post_type": fields.Integer,
-    "title": fields.String,
+    # "title": fields.String,
     "content": fields.String,
     "post_time": fields.String,
-    "uid": fields.Integer,
+    "user": fields.Nested(__user_structure),
     "description": fields.String,
     "thumb_ups": fields.List(fields.Nested(__thumb_ups_structure)),
     "comments": fields.List(fields.Nested(__comment_structure)),
@@ -34,28 +40,31 @@ SINGLE_POST_STRUCTURE = {
 }
 
 post_parser = reqparse.RequestParser(trim=True)
-post_parser.add_argument("title", required=True, location="json")
+# post_parser.add_argument("title", required=True, location="json")
 post_parser.add_argument("content", required=True, location="json")
-post_parser.add_argument("description", location="json")
 post_parser.add_argument("uid", type=int, required=True, location="json")
 post_parser.add_argument("post_type", type=int, required=True, location="json")
 post_parser.add_argument("token", required=True, location="json")
+post_parser.add_argument("description", location="json")
 post_parser.add_argument("photo_list_json", location="json")
+
+# 必须的参数 content, uid, post_type, token
+# 非必须参数 description photo_list_json
 
 # 需要提交之前修改的id
 put_parser = post_parser.copy()
 put_parser.add_argument("id", type=int, required=True, location="json")
 
 delete_parser = reqparse.RequestParser(trim=True)
-delete_parser.add_argument("token", required=True, location="args")
-delete_parser.add_argument("uid", type=int, required=True, location="args")
-delete_parser.add_argument("id", type=int, required=True, location="args")
+delete_parser.add_argument("token", required=True, location="headers")
+delete_parser.add_argument("uid", type=int, required=True, location="headers")
+delete_parser.add_argument("id", type=int, required=True, location="headers")
 
 # 新的对象的参数
-SINGLE_POST_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "token", "photo_list_json")
+SINGLE_POST_ACCEPT_VARIABLES = ("content", "description", "uid", "post_type", "token", "photo_list_json")
 
 # 用于修改之前post过的数据
-SINGLE_PUT_ACCEPT_VARIABLES = ("title", "content", "description", "uid", "post_type", "id", "token", "photo_list_json")
+SINGLE_PUT_ACCEPT_VARIABLES = ("content", "description", "uid", "post_type", "id", "token", "photo_list_json")
 
 # POST_RESOURCE_ACCEPTED_VARIABLE_DICT = {
 #     "post": POST_ACCEPT_VARIABLES,

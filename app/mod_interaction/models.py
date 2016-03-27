@@ -90,7 +90,7 @@ class Post(db.Model):
     post_type = db.Column(db.SMALLINT, nullable=False)
 
     # 标题
-    title = db.Column(db.String(40))
+    # title = db.Column(db.String(40))
 
     # 描述信息(比如说公众号的推文的描述信息)
     description = db.Column(db.String(140))

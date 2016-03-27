@@ -15,6 +15,6 @@ config["BANNER_DIR"] = BASE_DIR + os.path.sep + "banners"
 
 
 # private settings
-with open("config.conf") as f:
+with open(os.path.join(BASE_DIR, "config.conf")) as f:
     config.update(json.load(f))
 

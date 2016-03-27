@@ -27,8 +27,12 @@ def timestamp_to_string(timestamp, format="%Y-%m-%d %H:%M:%S"):
     :param timestamp:
     :return:
     """
-    time_string = datetime.fromtimestamp(int(timestamp))
-    time_string = time_string.strftime(format)
+    try:
+        time_string = datetime.fromtimestamp(int(timestamp))
+        time_string = time_string.strftime(format)
+    except TypeError as e:
+        print("timestamp_to_string: ", timestamp)
+        return None
     return time_string
 
 
