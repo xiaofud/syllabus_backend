@@ -19,9 +19,10 @@ post_parser.add_argument("post_id", required=True, type=int, location="json")
 post_parser.add_argument("uid", required=True, type=int, location="json")
 post_parser.add_argument("token", required=True, location="json")
 
-delete_parser = post_parser.copy()
-delete_parser.add_argument("id", required=True, type=int, location="json")
-delete_parser.remove_argument("post_id")
+delete_parser = reqparse.RequestParser(trim=True)
+delete_parser.add_argument("id", required=True, type=int, location="headers")
+delete_parser.add_argument("uid", required=True, type=int, location="headers")
+delete_parser.add_argument("token", required=True, location="headers")
 
 
 

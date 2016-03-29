@@ -22,7 +22,7 @@ app.register_blueprint(credit_blueprint)
 # 404
 @app.errorhandler(404)
 def not_found(e):
-    return jsonify(error=str(e))
+    return jsonify(error=str(e)), 404   # 一定记得返回 404 code
 
 # print(db.get_tables_for_bind())
 db.drop_all()
@@ -64,7 +64,7 @@ def generate_test_data():
             "post_type": 1,
             "uid": user.id,
             # "title": "this is title",
-            "content": "this is content",
+            "content": "this is content" * 100,
             "description": "this is description",
             "photo_list_json": photo_list_json
     }
@@ -74,7 +74,7 @@ def generate_test_data():
     db.session.commit()
 
 
-    for i in range(10):
+    for i in range(20):
 
         user_info = {
             "account": "14xfdeng " + str(i),
@@ -92,7 +92,7 @@ def generate_test_data():
             "post_type": 1,
             "uid": user.id,
             # "title": "this is title",
-            "content": "this is content",
+            "content": "this is content %d\n" % i  ,
             "description": "this is description",
             "photo_list_json": photo_list_json
         }
@@ -103,9 +103,9 @@ def generate_test_data():
         db.session.commit()
 
         comment_info = {
-            "post_id": 1,
+            "post_id": post.id,
             "uid": user.id,
-            "comment": "comment"
+            "comment": "hello world" * 8
         }
         comment = Comment(**comment_info)
 
@@ -114,7 +114,7 @@ def generate_test_data():
 
         like_info = {
             "uid": user.id,
-            "post_id": 1
+            "post_id": post.id
         }
 
         like = ThumbUp(**like_info)
@@ -122,5 +122,5 @@ def generate_test_data():
         db.session.add(like)
         db.session.commit()
 
-
+# print("called")
 generate_test_data()

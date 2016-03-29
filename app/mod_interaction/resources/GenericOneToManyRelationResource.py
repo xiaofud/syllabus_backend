@@ -20,7 +20,7 @@ class GenericOneToManyRelationResource(GenericMultipleResource):
             return {"error": "wrong field name"}, 400
 
         if len(result) == 0:
-            return {"error": "no resources yet"}, 401
+            return {"error": "no resources yet"}, 404
         else:
             return marshal(result, self.marshal_structure, envelope=self.envelope)
 

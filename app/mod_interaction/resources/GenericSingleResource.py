@@ -102,6 +102,7 @@ class GenericSingleResource(Resource):
 
         if "post" in self.parsers:
             args = self.parsers["post"].parse_args()
+            # print(args)
             if "post" in self.accepted_variable_dict:
                 helpers.clean_arguments(args, self.accepted_variable_dict["post"])
             # 进行时间处理
@@ -112,6 +113,7 @@ class GenericSingleResource(Resource):
 
             # 看看是否需要检查token
             if self.token_check_callbacks is not None and "post" in self.token_check_callbacks:
+                print("token checking")
                 # print("checking token")
                 # print("input token", args["token"])
                 if not self.token_check_callbacks["post"](args):
@@ -122,7 +124,7 @@ class GenericSingleResource(Resource):
 
         # 调用回调方法
         if self.extra_callbacks is not None and "post" in self.extra_callbacks:
-            # print("callback")
+            print("callback")
             ret_val = self.extra_callbacks["post"](args)
             # 比如说有用户打算重复投票
             # print("called back returned")
@@ -212,5 +214,5 @@ class GenericSingleResource(Resource):
                 elif result[1] == common.ERROR_COMMIT_FAILED:
                     return {"error": "failed"}, 500 # Internal Server Error
                 elif result[1] == common.ERROR_USER_ID_CONFLICT:
-                    return {"error": "kidding me?"}, 401
+                    return {"error": "kidding me?"}, 403
         return {"error": "bad request"}, 400

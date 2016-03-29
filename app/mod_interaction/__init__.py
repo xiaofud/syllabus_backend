@@ -47,7 +47,7 @@ api.add_resource(GenericSingleResource, "/comment/<int:id>", "/comment", endpoin
 
 # curl localhost:8080/interaction/api/v2/like/1
 # curl localhost:8080/interaction/api/v2/like -i -X POST -H "Content-type:application/json" -d '{"post_id": 1, "uid": 1, "token": "000000"}'
-# curl -i -X DELETE localhost:8080/interaction/api/v2/like/1 -H "Content-type:application/json" -d '{"uid": 1, "token": "000000", "id": 1}'
+# curl -i -X DELETE localhost:8080/interaction/api/v2/like -H "id: 1" -H "uid: 1" -H "token: 000000"
 api.add_resource(GenericSingleResource, "/like/<int:id>", "/like", endpoint="like", resource_class_kwargs=ThumbUpResource.SINGLE_THUMB_UP_INITIAL_KWARGS)
 # ================= 获取单个资源 =================
 
@@ -58,7 +58,7 @@ api.add_resource(GenericMultipleResource, "/posts", "/posts/", endpoint="posts",
 # ================= 获取多个资源 =================
 
 # ================= 寻找一对多的资源 =================
-# curl "localhost:8080/interaction/api/v2/post_comments?field=uid&value=1&offset=2&count=1&sort_type=2&order_by=id"
+# curl "http://localhost:8080/interaction/api/v2/post_comments?field=post_id&value=3"
 api.add_resource(GenericOneToManyRelationResource, "/post_comments", "/post_comments/", endpoint="post_comments", resource_class_kwargs=CommentResource.QUERY_COMMENTS_FOR_POST_INITIAL_KWARGS)
 # ================= 寻找一对多的资源 =================
 

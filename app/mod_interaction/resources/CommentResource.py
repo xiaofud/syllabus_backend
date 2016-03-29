@@ -7,12 +7,18 @@ from app.mod_interaction.resources.GenericOneToManyRelationResource import Gener
 from app.mod_interaction.database_operations import common
 from app.mod_interaction.models import Comment
 
+__user_structure = {
+    "nickname": fields.String,
+    "account": fields.String
+}
+
 SINGLE_COMMENT_STRUCTURE = {
     "id": fields.Integer,
     "post_time": fields.String,
     "comment": fields.String,
     "post_id": fields.Integer,
-    "uid": fields.Integer
+    "uid": fields.Integer,
+    "user": fields.Nested(__user_structure)
 }
 
 post_parser = reqparse.RequestParser(trim=True)
@@ -62,7 +68,7 @@ get_comments_parser.add_argument(common.QUERY_ATTR_FILTER_VALUE, required=True, 
 get_comments_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, location="args")
 get_comments_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
 get_comments_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
-get_comments_parser.add_argument(common.QUERY_ATTR_OFFSET, type=int, location="args")
+get_comments_parser.add_argument(common.QUERY_ATTR_BEFORE_ID, type=int, location="args")
 
 
 QUERY_COMMENTS_FOR_POST_INITIAL_KWARGS = {

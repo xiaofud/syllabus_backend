@@ -14,14 +14,15 @@ QUERY_SORT_TYPE_ASC = 1 # 升序排列
 QUERY_SORT_TYPE_DESC = 2    # 降序排列
 QUERY_ORDER_BY_DEFAULT = "id"   # 默认按照id排序
 QUERY_RESULT_COUNT_DEFAULT = 10 # 默认返回10条数据
-QUERY_OFFSET_DEFAULT = 1    # 默认的偏移量
+# 注意默认不能是1, 因为offset就是直接针对第一个记录的偏移量
+QUERY_BEFORE_ID_DEFAULT = 9999999999    # 获取最新的数据的意思
 
 QUERY_ATTR_SORT_TYPE = "sort_type"
 QUERY_ATTR_COUNT = "count"
 QUERY_ATTR_ORDER_BY = "order_by"
 QUERY_ATTR_FILTER_FIELD = "field"
 QUERY_ATTR_FILTER_VALUE = "value"
-QUERY_ATTR_OFFSET = "offset"
+QUERY_ATTR_BEFORE_ID = "before_id"  # 查找 id < after_id 的
 
 from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE
 
@@ -59,14 +60,16 @@ def query_multiple(model, **kwargs):
     sorting = kwargs.pop(QUERY_ATTR_SORT_TYPE) or QUERY_SORT_TYPE_DESC  # 降序
     count = kwargs.pop(QUERY_ATTR_COUNT) or QUERY_RESULT_COUNT_DEFAULT   # 返回的数量
     order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
-    offset = kwargs.pop(QUERY_ATTR_OFFSET) or QUERY_OFFSET_DEFAULT  # 偏移量
+    before_id = kwargs.pop(QUERY_ATTR_BEFORE_ID) or QUERY_BEFORE_ID_DEFAULT  # 偏移量
 
-    tmp = try_to_int(offset)
+    print(before_id)
+
+    tmp = try_to_int(before_id)
     if tmp != False:
-        offset = tmp
+        before_id = tmp
 
-    if offset < 1 :
-        offset = 1
+    if before_id < 0 :
+        before_id = 0
 
     if count <= 0 :
         count = QUERY_RESULT_COUNT_DEFAULT
@@ -76,16 +79,16 @@ def query_multiple(model, **kwargs):
 
 
     if sorting == QUERY_SORT_TYPE_DESC:
-        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
+        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).filter(model.id < before_id).order_by(getattr(model, order_by).desc()).limit(count).all()
     else:
-        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
+        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).filter(model.id < before_id).order_by(getattr(model, order_by).asc()).limit(count).all()
 
 def query_one_to_many(model, **kwargs):
     # 因为传入的参数里面可能有的是None
     sorting = kwargs.pop(QUERY_ATTR_SORT_TYPE) or QUERY_SORT_TYPE_DESC  # 降序
     count = kwargs.pop(QUERY_ATTR_COUNT) or QUERY_RESULT_COUNT_DEFAULT   # 返回的数量
     order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
-    offset = kwargs.pop(QUERY_ATTR_OFFSET) or QUERY_OFFSET_DEFAULT  # 偏移量
+    before_id = kwargs.pop(QUERY_ATTR_BEFORE_ID) or QUERY_BEFORE_ID_DEFAULT  # 偏移量
     filed = kwargs.pop(QUERY_ATTR_FILTER_FIELD) or None
     value = kwargs.pop(QUERY_ATTR_FILTER_VALUE) or None
 
@@ -94,9 +97,9 @@ def query_one_to_many(model, **kwargs):
     if tmp != False:
         value = tmp
 
-    tmp = try_to_int(offset)
+    tmp = try_to_int(before_id)
     if tmp != False:
-        offset = tmp
+        before_id = tmp
 
     if filed is None:
         return False
@@ -107,12 +110,14 @@ def query_one_to_many(model, **kwargs):
 
     # print(model.__tablename__, " has ", filed)
 
-    # print(offset)
+    # print(before_id)
 
     if sorting == QUERY_SORT_TYPE_DESC:
-        return model.query.filter(getattr(model, filed) == value).filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).desc()).offset(offset).limit(count).all()
+        return \
+            model.query.filter(getattr(model, filed) == value).filter(model.id < before_id).filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).desc()).limit(count).all()
     else:
-        return model.query.filter(getattr(model, filed) == value).filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).asc()).offset(offset).limit(count).all()
+        return \
+            model.query.filter(getattr(model, filed) == value).filter(model.id < before_id).filter_by(visibility=VISIBILITY_VISIBLE).order_by(getattr(model, order_by).asc()).limit(count).all()
 
 
 # def query(model, **kwargs):
@@ -171,10 +176,10 @@ def get_last_inserted_id(model):
     return model.query.with_entities(model.id).order_by(model.id.desc()).first().id
 
 def new_record(db, model, **kwargs):
+    print(kwargs)
     thing = model(**kwargs)
     result = add_to_db(db, thing)
     if result == True:
-
         return get_last_inserted_id(model)
     else:
         return False
@@ -225,5 +230,5 @@ def check_token(args):
             # print("token is right")
             return True
         else:
-            print("token wrong")
+            print("token wrong {}".format(token))
     return False
