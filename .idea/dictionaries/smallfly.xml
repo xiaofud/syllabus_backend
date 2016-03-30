@@ -2,6 +2,7 @@
   <dictionary name="smallfly">
     <words>
       <w>attrs</w>
+      <w>uwsgi</w>
     </words>
   </dictionary>
 </component>
