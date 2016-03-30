@@ -176,7 +176,7 @@ def get_last_inserted_id(model):
     return model.query.with_entities(model.id).order_by(model.id.desc()).first().id
 
 def new_record(db, model, **kwargs):
-    print(kwargs)
+    # print(kwargs)
     thing = model(**kwargs)
     result = add_to_db(db, thing)
     if result == True:
