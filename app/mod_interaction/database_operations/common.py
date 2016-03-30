@@ -62,7 +62,7 @@ def query_multiple(model, **kwargs):
     order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
     before_id = kwargs.pop(QUERY_ATTR_BEFORE_ID) or QUERY_BEFORE_ID_DEFAULT  # 偏移量
 
-    print(before_id)
+    # print(before_id)
 
     tmp = try_to_int(before_id)
     if tmp != False:

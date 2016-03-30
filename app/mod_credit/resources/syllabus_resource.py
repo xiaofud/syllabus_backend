@@ -28,10 +28,20 @@ def new_or_update_user(account, token):
     if user is None:
         # 新用户
         user = User(account=account, token=token)
-        return common.add_to_db(db, user)
+        ret_val = common.add_to_db(db, user)
+        if ret_val != True:
+            print(ret_val[1])
+            return False
+        else:
+            return user
     # 老用户
     user.token = token  # 更新token
-    return common.add_to_db(db, user)
+    ret_val = common.add_to_db(db, user)
+    if ret_val != True:
+        print(ret_val[1])
+        return False
+    else:
+        return user
 
 class SyllabusResource(Resource):
 
@@ -47,6 +57,8 @@ class SyllabusResource(Resource):
         result = r.json()
         if "token" in result:
             ret = new_or_update_user(args["username"], result["token"])
-            if ret != True:
-                print("fail to new_or_update_user", ret[1])
+            if ret != False:
+                # 添加 user_id 到 result 里面
+                result["user_id"] = ret.id
+
         return result

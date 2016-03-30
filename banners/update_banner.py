@@ -13,7 +13,7 @@ def backup_previous():
     if os.path.exists(NOTIFICATION_FILE_PATH):
         with open(NOTIFICATION_FILE_PATH) as f:
             obj = json.load(f)
-            with open(NOTIFICATION_FILE_PATH + "_" + str(obj["timestamp"]), "w") as o:
+            with open(NOTIFICATION_FILE_PATH + "_" + str(obj["timestamp"]) + ".txt", "w") as o:
                 json.dump(obj, o)
                 print("backup finished!")
 
