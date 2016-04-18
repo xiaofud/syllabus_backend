@@ -36,6 +36,7 @@ api.add_resource(CompatibleUserResource, "/compatible_user/<account>", endpoint=
 # curl localhost:8080/interaction/api/v2/post/1
 # curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X POST -d '{"title": "testing_title", "content": "haha", "description": "click me", "uid": 1, "post_type": 1, "token": "000000"}'
 # curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X PUT -d '{"title": "testing_title", "content": "haha", "id": 2, "description": "do not click me", "uid": 1, "post_type": 1, "token": "000000"}'
+# curl localhost:8080/interaction/api/v2/post -i -H "token: 000000" -H "uid: 1" -H "id: 1" -X DELETE
 # api.add_resource(PostResource, "/post/<int:id>", "/post", endpoint="post")
 api.add_resource(GenericSingleResource, "/post/<int:id>", "/post", endpoint="post", resource_class_kwargs=PostResource.SINGLE_INITIAL_KWARGS)
 

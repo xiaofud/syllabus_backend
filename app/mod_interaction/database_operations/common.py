@@ -3,6 +3,8 @@ __author__ = 'smallfly'
 
 # http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
+from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE
+from config import config
 
 # 一些错误常量
 ERROR_NOT_FOUND = 1
@@ -24,7 +26,7 @@ QUERY_ATTR_FILTER_FIELD = "field"
 QUERY_ATTR_FILTER_VALUE = "value"
 QUERY_ATTR_BEFORE_ID = "before_id"  # 查找 id < after_id 的
 
-from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE
+
 
 def try_to_int(the_str):
     try:
@@ -194,12 +196,14 @@ def delete_from_db(db, model, id, uid):
     :return:
     """
     thing = query_single_by_id(model, id)
+    the_user = query_single_by_id(User, uid)
     # print(thing)
-    if thing is None:
+    # print(the_user)
+    if thing is None or the_user is None:
         return False, ERROR_NOT_FOUND
-
+    # print("checking")
     # 检查有没有权限删除
-    if thing.uid != uid:
+    if thing.uid != uid and not the_user.account in config["ADMINISTRATION"]:
         return False, ERROR_USER_ID_CONFLICT
     try:
         if hasattr(thing, "visibility"):
