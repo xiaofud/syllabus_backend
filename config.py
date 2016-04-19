@@ -4,7 +4,7 @@ import os, json
 config = dict()
 
 # Statement for enabling the development environment
-config["DEBUG"] = True
+config["DEBUG"] = False
 
 # Define the application directory
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
