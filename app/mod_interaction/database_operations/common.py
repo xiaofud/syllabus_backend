@@ -42,7 +42,10 @@ def query_single_by_id(model, id_):
     :param id_: 主键
     :return:    记录 或者 None
     """
-    return model.query.filter_by(id=id_).filter_by(visibility=VISIBILITY_VISIBLE).first()
+    if hasattr(model, "visibility"):
+        return model.query.filter_by(id=id_).filter_by(visibility=VISIBILITY_VISIBLE).first()
+    else:
+        return model.query.filter_by(id=id_).first()
 
     # 参考文档
     # return model.query.get(id_)
@@ -53,7 +56,10 @@ def query_single_by_filed(model, field, value):
     kwargs = {
         field: value
     }
-    return model.query.filter_by(**kwargs).filter_by(visibility=VISIBILITY_VISIBLE).first()
+    if hasattr(model, "visibility"):
+        return model.query.filter_by(**kwargs).filter_by(visibility=VISIBILITY_VISIBLE).first()
+    else:
+        return model.query.filter_by(**kwargs).first()
 
 
 
