@@ -171,7 +171,7 @@ class ThumbUp(db.Model):
     uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     # 是否对外部可见
-    visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
+    # visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
 
     def __repr__(self):
         return "<ThumbUp from {} to {}>".format(self.user.account, self.post.title)

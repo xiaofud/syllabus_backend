@@ -96,11 +96,11 @@ SINGLE_INITIAL_KWARGS = {
 
 # 获取文章列表
 
-get_multiple_users_parser = reqparse.RequestParser(trim=True)
-get_multiple_users_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, location="args")
-get_multiple_users_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
-get_multiple_users_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
-get_multiple_users_parser.add_argument(common.QUERY_ATTR_BEFORE_ID, type=int, location="args")
+get_multiple_posts_parser = reqparse.RequestParser(trim=True)
+get_multiple_posts_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, location="args")
+get_multiple_posts_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
+get_multiple_posts_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
+get_multiple_posts_parser.add_argument(common.QUERY_ATTR_BEFORE_ID, type=int, location="args")
 
 
 
@@ -115,7 +115,7 @@ MULTIPLE_USERS_INITIAL_KWARGS = {
     GenericMultipleResource.MARSHAL_STRUCTURE: SINGLE_POST_STRUCTURE,
     GenericMultipleResource.MODEL: Post,
     GenericMultipleResource.PARSER_FOR_METHODS_DICT: {
-        "get": get_multiple_users_parser
+        "get": get_multiple_posts_parser
     },
     GenericMultipleResource.ENVELOPE: "post_list"
 }
