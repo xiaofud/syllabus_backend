@@ -24,6 +24,7 @@ app.register_blueprint(credit_blueprint)
 def not_found(e):
     return jsonify(error=str(e)), 404   # 一定记得返回 404 code
 
+# 不要在这里建立数据库
 # db.drop_all()
-db.create_all()
+# db.create_all()
 

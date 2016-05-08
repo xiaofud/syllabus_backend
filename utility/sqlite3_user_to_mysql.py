@@ -93,9 +93,14 @@ def insert_people():
     print(user)
 
 def sqlite3_to_mysql_user():
+    # sqlite3_users = UserModel.query.distinct(UserModel.user_account).all()
     sqlite3_users = UserModel.query.all()
+    # 因为之前有一些末尾有空格的错误数据, 所以需要处理一下
+
+    print(len(sqlite3_users))
+
     for sqlite3_user in sqlite3_users:
-        account = sqlite3_user.user_account
+        account = sqlite3_user.user_account.strip()
         nickname =  sqlite3_user.user_nickname.strip()
         token = sqlite3_user.user_certificate
         user = User(account=account, nickname=nickname, token=token)

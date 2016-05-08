@@ -175,3 +175,21 @@ class ThumbUp(db.Model):
 
     def __repr__(self):
         return "<ThumbUp from {} to {}>".format(self.user.account, self.post.title)
+
+
+# 新的表
+# class Shop(db.Model):
+#
+#     __tablename__ = "shops"
+#
+#     # 主键
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#
+#     # 店名
+#     name = db.Column(db.VARCHAR(40), nullable=False)
+#
+#     # 电话
+#     phone = db.Column(db.VARCHAR(20), nullable=False)
+#
+#     # Website
+#     website = db.Column(db.VARCHAR(120), nullable=False)
