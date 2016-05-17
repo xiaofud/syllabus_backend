@@ -60,5 +60,6 @@ class SyllabusResource(Resource):
             if ret != False:
                 # 添加 user_id 到 result 里面
                 result["user_id"] = ret.id
+                result["avatar"] = ret.image
 
         return result

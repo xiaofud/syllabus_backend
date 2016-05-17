@@ -67,6 +67,7 @@ def query_multiple(model, **kwargs):
     # 因为传入的参数里面可能有的是None
     sorting = kwargs.pop(QUERY_ATTR_SORT_TYPE) or QUERY_SORT_TYPE_DESC  # 降序
     count = kwargs.pop(QUERY_ATTR_COUNT) or QUERY_RESULT_COUNT_DEFAULT   # 返回的数量
+    # order_by 是字段名, 即表的某个字段名
     order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
     before_id = kwargs.pop(QUERY_ATTR_BEFORE_ID) or QUERY_BEFORE_ID_DEFAULT  # 偏移量
 

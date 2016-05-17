@@ -21,6 +21,7 @@ from app.mod_interaction.resources.VersionResource import VersionResource
 from app.mod_interaction.resources.BannerResource import BannerResource
 from app.mod_interaction.resources.UserResource import CompatibleUserResource
 
+
 from flask_restful import Api
 
 api = Api(interaction_blueprint, prefix="/api/v2")
