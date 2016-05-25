@@ -176,6 +176,24 @@ class ThumbUp(db.Model):
     def __repr__(self):
         return "<ThumbUp from {} to {}>".format(self.user.account, self.post.title)
 
+# 未读资源
+class UnReadResource(db.Model):
+    """
+    每条记录有 uid, post_id 两个外键, 表明
+    用户uid在post_id这篇文章内有未读的动态.
+    """
+    __tablename__ = "unreads"
+
+    # 主键
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    # 点赞的对象
+    post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
+
+    def __repr__(self):
+        return "<UnRead uid: %r pid: %r>" % (self.uid, self.post_id)
 
 # 新的表
 # class Shop(db.Model):
