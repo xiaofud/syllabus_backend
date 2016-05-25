@@ -6,7 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 # 读取配置文件
 import config
 
-app = Flask(__name__)
+# 相同目录下找 static 文件夹
+app = Flask(__name__, static_folder='static')
 app.config.update(config.config)
 db = SQLAlchemy(app)
 

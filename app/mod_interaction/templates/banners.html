@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设置banners</title>
+
+    <!-- 引入库-->
+    <script src="{{ url_for('static', filename='bootstrap-3.3.5-dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery-2.2.0.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.5-dist/css/bootstrap.min.css') }}">
+    <script src="/app/static/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+    <script src="/app/static/jquery-2.2.0.min.js"></script>
+    <link rel="stylesheet" href="/app/static/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/syllabus_backend/app/static/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+    <script src="/syllabus_backend/app/static/jquery-2.2.0.min.js"></script>
+    <link rel="stylesheet" href="/syllabus_backend/app/static/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+
+    <!-- 引入库-->
+
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1>修改课程表显示的banner</h1>
+        </div>
+        <div id="banners" class="row">
+            <div class="col-md-offset-3 col-md-6">
+                <form method="POST" action="">
+                {#获取长度#}
+                {% set len = banner.notifications | length %}
+                {% for notification in banner.notifications %}
+                    <!-- 显示一半大小 -->
+                    <h3 class="page-header">{{ loop.index }}</h3>
+                    <p align="center">
+                        <!--width="320" height="180"-->
+                        <img src="{{ notification.url }}">
+                    </p>
+                    <div class="form-group form-group-sm">
+                        <label for="url">图片链接</label>
+                        <input class="form-control" name="url" id="url" type="url" value="{{ notification.url }}">
+                    </div>
+
+                    <div class="form-group form-group-sm">
+                        <label for="link">点开的链接</label>
+                        <input class="form-control" type="text" value="{{notification.link}}" name="link" id="link">
+                    </div>
+
+                    <div class="form-group form-group-sm">
+                        <label for="desc">图片描述</label>
+                        <textarea class="form-control" id="desc" name="desc">{{notification.description}}</textarea>
+                    </div>
+
+
+                {% endfor %}
+                {% if len < 5 %}
+                    {% set n = 5 - len %}
+                    {% for i in range(n) %}
+                        <h3 class="page-header">{{ i + n + 2 }}</h3>
+
+                        <div class="form-group form-group-sm">
+                            <label for="url">图片链接</label>
+                            <input class="form-control" name="url" id="url" type="url" value="">
+                        </div>
+
+                            <div class="form-group form-group-sm">
+                            <label for="link">点开的链接</label>
+                            <input class="form-control" type="text" value="" name="link" id="link">
+                        </div>
+
+                        <div class="form-group form-group-sm">
+                            <label for="desc">图片描述</label>
+                            <textarea class="form-control" id="desc" name="desc"></textarea>
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+                <button type="submit" class="btn btn-primary">修改</button>
+            </form>
+            </div>
+            <div class="col-md-3">
+                <!-- empty-->
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -3,7 +3,7 @@ __author__ = 'smallfly'
 
 # http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
-from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE
+from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE, Comment
 from config import config
 
 # 一些错误常量
@@ -184,11 +184,15 @@ def get_last_inserted_id(model):
     # with_entities(model.field, xxx)    # 仅仅取指定的字段
     return model.query.with_entities(model.id).order_by(model.id.desc()).first().id
 
+
 def new_record(db, model, **kwargs):
     # print(kwargs)
     thing = model(**kwargs)
     result = add_to_db(db, thing)
     if result == True:
+        if issubclass(model, Comment):
+            print("inserting comment")
+
         return get_last_inserted_id(model)
     else:
         return False

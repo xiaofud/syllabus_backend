@@ -43,7 +43,7 @@ filename = os.path.join(config.config["VERSION_DIR"], VERSION_FILE)
 def load_version():
     if os.path.exists(filename):
         with open(filename, encoding="utf-8") as f:
-            json_obj = json.load(f)
+            json_obj = json.load(f, encoding='utf-8')
         return json_obj
     return None
 
@@ -51,6 +51,19 @@ NOTIFICATION_FILE_PATH = os.path.join(config.config["BANNER_DIR"], "banner.txt")
 
 def get_notification():
     if os.path.exists(NOTIFICATION_FILE_PATH):
-        with open(NOTIFICATION_FILE_PATH) as f:
-            return json.load(f)
+        with open(NOTIFICATION_FILE_PATH, encoding='utf-8') as f:
+            return json.load(f, encoding='utf-8')
     return None
+
+
+def make_notification(urls, links, descs):
+    """
+    成功返回True, 否则 False
+    :param urls: 所有图片url
+    :param links: 所有跳转url
+    :param descs: 所有描述
+    :return:
+    """
+    if (len(urls) != len(links) or len(urls) != len(descs)):
+
+        return False

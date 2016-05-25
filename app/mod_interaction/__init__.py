@@ -4,7 +4,13 @@ __author__ = 'smallfly'
 # 存放了用户数据, 以及活动之类的互动.
 
 from flask import Blueprint
-interaction_blueprint = Blueprint("interaction", __name__, url_prefix="/interaction")   # url 必须以 / 开头
+# 默认在这个blueprint建立的目录中寻找templates
+interaction_blueprint = Blueprint(
+    "interaction",
+    __name__,
+    url_prefix="/interaction",
+    template_folder='templates'
+)   # url 必须以 / 开头
 
 # 加载数据表
 from app.mod_interaction import models
@@ -21,6 +27,8 @@ from app.mod_interaction.resources.VersionResource import VersionResource
 from app.mod_interaction.resources.BannerResource import BannerResource
 from app.mod_interaction.resources.UserResource import CompatibleUserResource
 
+# views
+from app.mod_interaction.views import BannerView
 
 from flask_restful import Api
 
@@ -68,5 +76,7 @@ api.add_resource(VersionResource, "/version", "/version/", endpoint="version")
 api.add_resource(BannerResource, "/banner", "/banner/", endpoint="banner")
 
 
+# ============== 添加views ==============
 
+interaction_blueprint.add_url_rule("/banners", view_func=BannerView.as_view("banners"))
 

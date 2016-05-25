@@ -61,5 +61,6 @@ class SyllabusResource(Resource):
                 # 添加 user_id 到 result 里面
                 result["user_id"] = ret.id
                 result["avatar"] = ret.image
+                result["nickname"] = ret.nickname
 
         return result
