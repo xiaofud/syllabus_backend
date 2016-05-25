@@ -57,7 +57,7 @@
                 {% if len < 5 %}
                     {% set n = 5 - len %}
                     {% for i in range(n) %}
-                        <h3 class="page-header">{{ i + n + 2 }}</h3>
+                        <h3 class="page-header">{{ loop.index + len }}</h3>
 
                         <div class="form-group form-group-sm">
                             <label for="url">图片链接</label>

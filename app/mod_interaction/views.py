@@ -2,7 +2,7 @@
 __author__ = 'smallfly'
 
 from flask.views import View
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from app.mod_interaction.resources import helpers
 
 
@@ -23,4 +23,4 @@ class BannerView(View):
             banner = helpers.get_notification()
             return render_template("banners.html", banner=banner)
         elif request.method == 'POST':
-            return request.form.get("desc")
+            return jsonify(status="just a stub now")
