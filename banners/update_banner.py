@@ -11,9 +11,9 @@ NOTIFICATION_FILE_PATH = NOTIFICATION_FILENAME
 
 def backup_previous():
     if os.path.exists(os.path.join(dirname, NOTIFICATION_FILE_PATH)):
-        with open(os.path.join(dirname, NOTIFICATION_FILE_PATH)) as f:
+        with open(os.path.join(dirname, NOTIFICATION_FILE_PATH), encoding='utf-8') as f:
             obj = json.load(f)
-            with open(os.path.join(dirname, NOTIFICATION_FILE_PATH) + "_" + str(obj["timestamp"]) + ".txt", "w") as o:
+            with open(os.path.join(dirname, NOTIFICATION_FILE_PATH) + "_" + str(obj["timestamp"]) + ".txt", "w", encoding='utf-8') as o:
                 json.dump(obj, o)
                 print("backup finished!")
                 return True
@@ -57,7 +57,7 @@ def new_notification():
 if __name__ == "__main__":
     print(NOTIFICATION_FILE_PATH)
     obj =  new_notification()
-    with open(os.path.join(dirname, NOTIFICATION_FILE_PATH), "w") as f:
+    with open(os.path.join(dirname, NOTIFICATION_FILE_PATH), "w", encoding='utf-8') as f:
         json.dump(obj, f, ensure_ascii=False)
         print("生成成功!")
 

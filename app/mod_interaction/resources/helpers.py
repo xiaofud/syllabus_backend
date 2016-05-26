@@ -44,7 +44,7 @@ filename = os.path.join(config.config["VERSION_DIR"], VERSION_FILE)
 def load_version():
     if os.path.exists(filename):
         with open(filename, encoding="utf-8") as f:
-            json_obj = json.load(f, encoding='utf-8')
+            json_obj = json.load(f)
         return json_obj
     return None
 
@@ -53,7 +53,7 @@ NOTIFICATION_FILE_PATH = os.path.join(config.config["BANNER_DIR"], "banner.txt")
 def get_notification():
     if os.path.exists(NOTIFICATION_FILE_PATH):
         with open(NOTIFICATION_FILE_PATH, encoding='utf-8') as f:
-            return json.load(f, encoding='utf-8')
+            return json.load(f)
     return None
 
 
@@ -94,8 +94,9 @@ def make_notification(urls, links, descs):
     }
     from banners import update_banner
     update_banner.backup_previous()
-    with open(os.path.join(update_banner.dirname, update_banner.NOTIFICATION_FILE_PATH), "w") as f:
+    with open(os.path.join(update_banner.dirname, update_banner.NOTIFICATION_FILE_PATH), "w", encoding='utf-8') as f:
         json.dump(banner, f, ensure_ascii=False)
+        # print('saving to', os.path.join(update_banner.dirname, update_banner.NOTIFICATION_FILE_PATH))
         return True
     return False
 
