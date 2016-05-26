@@ -23,4 +23,7 @@ class BannerView(View):
             banner = helpers.get_notification()
             return render_template("banners.html", banner=banner)
         elif request.method == 'POST':
-            return jsonify(status="just a stub now")
+            if helpers.make_notification(request.form.getlist('url'), request.form.getlist('link'), request.form.getlist('desc')):
+                return jsonify(status="ok")
+            else:
+                return jsonify(status="failed")

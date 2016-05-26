@@ -1,21 +1,23 @@
-# coding = utf-8
+# coding=utf-8
 import os
 import time
 import json
 
 NOTIFICATION_FILENAME = "banner.txt"
-dirname = os.path.dirname(__file__)
+dirname = os.path.dirname(os.path.abspath(__file__))
 
 NOTIFICATION_FILE_PATH = NOTIFICATION_FILENAME
 
 
 def backup_previous():
-    if os.path.exists(NOTIFICATION_FILE_PATH):
-        with open(NOTIFICATION_FILE_PATH) as f:
+    if os.path.exists(os.path.join(dirname, NOTIFICATION_FILE_PATH)):
+        with open(os.path.join(dirname, NOTIFICATION_FILE_PATH)) as f:
             obj = json.load(f)
-            with open(NOTIFICATION_FILE_PATH + "_" + str(obj["timestamp"]) + ".txt", "w") as o:
+            with open(os.path.join(dirname, NOTIFICATION_FILE_PATH) + "_" + str(obj["timestamp"]) + ".txt", "w") as o:
                 json.dump(obj, o)
                 print("backup finished!")
+                return True
+    return False
 
 def new_notification():
     backup_previous()
@@ -55,7 +57,7 @@ def new_notification():
 if __name__ == "__main__":
     print(NOTIFICATION_FILE_PATH)
     obj =  new_notification()
-    with open(NOTIFICATION_FILE_PATH, "w") as f:
+    with open(os.path.join(dirname, NOTIFICATION_FILE_PATH), "w") as f:
         json.dump(obj, f, ensure_ascii=False)
         print("生成成功!")
 

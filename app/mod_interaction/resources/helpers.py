@@ -3,6 +3,7 @@ __author__ = 'smallfly'
 
 from datetime import datetime
 from copy import deepcopy
+import time
 import config
 import os
 import json
@@ -64,6 +65,37 @@ def make_notification(urls, links, descs):
     :param descs: 所有描述
     :return:
     """
-    if (len(urls) != len(links) or len(urls) != len(descs)):
+    # 去掉空项
+    urls = list(filter(lambda x: len(x.strip()) > 0, urls))
+    links = list(filter(lambda x: len(x.strip()) > 0, links))
+    descs = list(filter(lambda x: len(x.strip()) > 0, descs))
 
+    if (len(urls) != len(links) or len(urls) != len(descs)):
+        print(len(urls))
+        print(len(links))
+        print(len(descs))
+        print("different length")
         return False
+
+    notifications = []
+
+    for i, (url, link, description) in enumerate(zip(urls, links, descs)):
+        notification = {
+                "id": i,
+                "url": url,
+                "link": link,
+                "description": description
+            }
+        notifications.append(notification)
+
+    banner = {
+        "timestamp": int(time.time()),
+        "notifications": notifications,
+    }
+    from banners import update_banner
+    update_banner.backup_previous()
+    with open(os.path.join(update_banner.dirname, update_banner.NOTIFICATION_FILE_PATH), "w") as f:
+        json.dump(banner, f, ensure_ascii=False)
+        return True
+    return False
+

@@ -33,6 +33,7 @@ SINGLE_POST_STRUCTURE = {
     # "title": fields.String,
     "content": fields.String,
     "post_time": fields.String,
+    "source":fields.String,
     "user": fields.Nested(__user_structure),
     "description": fields.String,
     "thumb_ups": fields.List(fields.Nested(__thumb_ups_structure)),
@@ -42,6 +43,7 @@ SINGLE_POST_STRUCTURE = {
 
 post_parser = reqparse.RequestParser(trim=True)
 # post_parser.add_argument("title", required=True, location="json")
+post_parser.add_argument("source", location="json")
 post_parser.add_argument("content", required=True, location="json")
 post_parser.add_argument("uid", type=int, required=True, location="json")
 post_parser.add_argument("post_type", type=int, required=True, location="json")
@@ -62,10 +64,10 @@ delete_parser.add_argument("uid", type=int, required=True, location="headers")
 delete_parser.add_argument("id", type=int, required=True, location="headers")
 
 # 新的对象的参数
-SINGLE_POST_ACCEPT_VARIABLES = ("content", "description", "uid", "post_type", "token", "photo_list_json")
+SINGLE_POST_ACCEPT_VARIABLES = ("content", "description", "uid", "post_type", "token", "photo_list_json", "source")
 
 # 用于修改之前post过的数据
-SINGLE_PUT_ACCEPT_VARIABLES = ("content", "description", "uid", "post_type", "id", "token", "photo_list_json")
+SINGLE_PUT_ACCEPT_VARIABLES = ("content", "description", "uid", "post_type", "id", "token", "photo_list_json", "source")
 
 # POST_RESOURCE_ACCEPTED_VARIABLE_DICT = {
 #     "post": POST_ACCEPT_VARIABLES,

@@ -110,6 +110,9 @@ class Post(db.Model):
     # 是否对外部可见
     visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
 
+    # 记录客户端系统, 如 iOS android
+    source = db.Column(db.VARCHAR(20), nullable=True)
+
     # ========== 关系 ==========
 
     # 这篇文章得到的评论
