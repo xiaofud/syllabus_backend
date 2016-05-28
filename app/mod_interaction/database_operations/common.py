@@ -184,6 +184,17 @@ def get_last_inserted_id(model):
     # with_entities(model.field, xxx)    # 仅仅取指定的字段
     return model.query.with_entities(model.id).order_by(model.id.desc()).first().id
 
+def get_latest_id(model):
+    """
+    获取数据库表的最新插入项的id
+    :param model: 代表数据库表
+    :return: id or None
+    """
+
+    if hasattr(model, "visibility"):
+        return model.query.with_entities(model.id).filter_by(visibility=VISIBILITY_VISIBLE).order_by(model.id.desc()).limit(1).first()
+    else:
+        return model.query.with_entities(model.id).order_by(model.id.desc()).limit(1).first()
 
 def new_record(db, model, **kwargs):
     # print(kwargs)

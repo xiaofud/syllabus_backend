@@ -26,6 +26,7 @@ from app.mod_interaction.resources.GenericOneToManyRelationResource import Gener
 from app.mod_interaction.resources.VersionResource import VersionResource
 from app.mod_interaction.resources.BannerResource import BannerResource
 from app.mod_interaction.resources.UserResource import CompatibleUserResource
+from app.mod_interaction.resources.LatestResource import LatestResource
 
 # views
 from app.mod_interaction.views import BannerView
@@ -74,6 +75,9 @@ api.add_resource(GenericOneToManyRelationResource, "/post_comments", "/post_comm
 
 api.add_resource(VersionResource, "/version", "/version/", endpoint="version")
 api.add_resource(BannerResource, "/banner", "/banner/", endpoint="banner")
+
+# ================= 获取最新资源的id =================
+api.add_resource(LatestResource, "/latest", "/latest/", endpoint="latest")
 
 
 # ============== 添加views ==============
