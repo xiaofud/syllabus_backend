@@ -21,6 +21,8 @@ def new_unread(post_id, comment_user_id):
     for comment in comments:
         if comment.uid != comment_user_id:
             unread = UnRead(uid=comment.uid, post_id=post_id)
+            print('add unread for user', comment.uid)
+            print('the unread:', repr(unread))
             db.session.add(unread)
     try:
         db.session.commit()
