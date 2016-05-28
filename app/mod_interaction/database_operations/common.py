@@ -4,6 +4,7 @@ __author__ = 'smallfly'
 # http://flask-sqlalchemy.pocoo.org/2.1/queries/#querying-records
 
 from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE, Comment
+from app.mod_interaction.database_operations.comment_operation import new_unread
 from config import config
 
 # 一些错误常量
@@ -202,7 +203,11 @@ def new_record(db, model, **kwargs):
     result = add_to_db(db, thing)
     if result == True:
         if issubclass(model, Comment):
-            print("inserting comment")
+            print("generating unread messages")
+            if new_unread(kwargs["post_id"], kwargs["uid"]):
+                print("succeed to generate unread messages")
+            else:
+                print("fail to generate unread messages")
 
         return get_last_inserted_id(model)
     else:

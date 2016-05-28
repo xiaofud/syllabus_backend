@@ -27,6 +27,7 @@ from app.mod_interaction.resources.VersionResource import VersionResource
 from app.mod_interaction.resources.BannerResource import BannerResource
 from app.mod_interaction.resources.UserResource import CompatibleUserResource
 from app.mod_interaction.resources.LatestResource import LatestResource
+from app.mod_interaction.resources.UnreadResource import UnreadResource
 
 # views
 from app.mod_interaction.views import BannerView
@@ -78,6 +79,9 @@ api.add_resource(BannerResource, "/banner", "/banner/", endpoint="banner")
 
 # ================= 获取最新资源的id =================
 api.add_resource(LatestResource, "/latest", "/latest/", endpoint="latest")
+
+# ================= 获取未读消息 =================
+api.add_resource(UnreadResource, "/unread", "/unread/", endpoint="unread")
 
 
 # ============== 添加views ==============

@@ -21,7 +21,7 @@ class LatestResource(Resource):
         返回值是{"id": "id"} 类型, id值可能是None
         :return:
         """
-        self.GET_PARSER.add_argument("type", location="args")
+        self.GET_PARSER.add_argument("type", type=int, location="args")
         args = self.GET_PARSER.parse_args()
         # 默认是查询post数据
 

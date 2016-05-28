@@ -180,7 +180,7 @@ class ThumbUp(db.Model):
         return "<ThumbUp from {} to {}>".format(self.user.account, self.post.title)
 
 # 未读资源
-class UnReadResource(db.Model):
+class UnRead(db.Model):
     """
     每条记录有 uid, post_id 两个外键, 表明
     用户uid在post_id这篇文章内有未读的动态.

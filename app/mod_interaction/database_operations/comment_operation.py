@@ -1,6 +1,8 @@
 # coding=utf-8
 __author__ = 'smallfly'
 
+from app.mod_interaction.models import Comment, UnRead
+from app import db
 
 def new_unread(post_id, comment_user_id):
     """
@@ -11,4 +13,20 @@ def new_unread(post_id, comment_user_id):
     :param comment_user_id: 当前评价的人
     :return:
     """
-    pass
+
+    # 找到所有先前评论过 post_id 所指向的post
+    # return model.query.with_entities(model.id).order_by(model.id.desc()).first().id
+    comments = Comment.query.with_entities(Comment.uid).filter_by(post_id=post_id).all()
+
+    for comment in comments:
+        if comment.uid != comment_user_id:
+            unread = UnRead(uid=comment.uid, post_id=post_id)
+            db.session.add(unread)
+    try:
+        db.session.commit()
+        return True
+    except Exception as e:
+        print("add unread error:", repr(e))
+        db.session.rollback()
+        return False
+
