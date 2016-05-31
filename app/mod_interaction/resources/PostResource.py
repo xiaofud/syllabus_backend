@@ -103,6 +103,8 @@ get_multiple_posts_parser.add_argument(common.QUERY_ATTR_COUNT, type=int, locati
 get_multiple_posts_parser.add_argument(common.QUERY_ATTR_ORDER_BY, location="args")
 get_multiple_posts_parser.add_argument(common.QUERY_ATTR_SORT_TYPE, type=int, location="args")    # 1 表示升序, 2 表示降序
 get_multiple_posts_parser.add_argument(common.QUERY_ATTR_BEFORE_ID, type=int, location="args")
+get_multiple_posts_parser.add_argument(common.QUERY_ATTR_FILTER_FIELD, location="args")
+get_multiple_posts_parser.add_argument(common.QUERY_ATTR_FILTER_VALUE, location="args")
 
 
 

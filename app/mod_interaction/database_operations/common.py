@@ -72,6 +72,12 @@ def query_multiple(model, **kwargs):
     order_by = kwargs.pop(QUERY_ATTR_ORDER_BY) or  QUERY_ORDER_BY_DEFAULT   # 按照什么排序
     before_id = kwargs.pop(QUERY_ATTR_BEFORE_ID) or QUERY_BEFORE_ID_DEFAULT  # 偏移量
 
+    field = kwargs.pop(QUERY_ATTR_FILTER_FIELD) or None
+    value = kwargs.pop(QUERY_ATTR_FILTER_VALUE) or None
+
+    # 控制查询
+    query = model.query.filter_by(visibility=VISIBILITY_VISIBLE)
+
     # print(before_id)
 
     tmp = try_to_int(before_id)
@@ -81,17 +87,34 @@ def query_multiple(model, **kwargs):
     if before_id < 0 :
         before_id = 0
 
+    # 用于分段获取
+    query = query.filter(model.id < before_id)
+
+    if field is not None:
+        if not hasattr(model, field):
+            # 即错误的参数
+            return False
+        query = query.filter(getattr(model, field) == value)
+
     if count <= 0 :
         count = QUERY_RESULT_COUNT_DEFAULT
 
     if not hasattr(model, order_by):
         return False
 
-
     if sorting == QUERY_SORT_TYPE_DESC:
-        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).filter(model.id < before_id).order_by(getattr(model, order_by).desc()).limit(count).all()
+        query = query.order_by(getattr(model, order_by).desc())
     else:
-        return model.query.filter_by(visibility=VISIBILITY_VISIBLE).filter(model.id < before_id).order_by(getattr(model, order_by).asc()).limit(count).all()
+        query = query.order_by(getattr(model, order_by).asc())
+
+    query = query.limit(count)
+
+
+    # if sorting == QUERY_SORT_TYPE_DESC:
+    #     return model.query.filter_by(visibility=VISIBILITY_VISIBLE).filter(model.id < before_id).order_by(getattr(model, order_by).desc()).limit(count).all()
+    # else:
+    #     return model.query.filter_by(visibility=VISIBILITY_VISIBLE).filter(model.id < before_id).order_by(getattr(model, order_by).asc()).limit(count).all()
+    return query.all()
 
 def query_one_to_many(model, **kwargs):
     # 因为传入的参数里面可能有的是None
