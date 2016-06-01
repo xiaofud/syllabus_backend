@@ -117,7 +117,8 @@ class Post(db.Model):
 
     # 这篇文章得到的评论
     # cascade="all, delete-orphan", 表示删除这个文章的时候将会删除所有与之关联起来的对象
-    comments = db.relationship("Comment", backref="post", cascade="all, delete-orphan")
+    comments = db.relationship("Comment", backref="post", cascade="all, delete-orphan",
+                               primaryjoin="and_(Post.id==Comment.post_id, Comment.visibility==1)")
 
 
     # 这篇文章得到的赞
