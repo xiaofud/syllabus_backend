@@ -13,6 +13,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 # application 是 uwsgi 所需的默认名字
 from app import app as application, db
+# 尝试解决 MySQL server has gone away 的问题
+application.config["SQLALCHEMY_POOL_RECYCLE"] = 5
 db.create_all()
 application.debug = False
 
