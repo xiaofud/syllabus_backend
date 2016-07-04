@@ -4,6 +4,10 @@ __author__ = 'smallfly'
 import sys
 import logging
 import os
+from gevent import monkey
+# 修改为异步
+monkey.patch_all()
+
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0, os.path.dirname(__file__))
 
