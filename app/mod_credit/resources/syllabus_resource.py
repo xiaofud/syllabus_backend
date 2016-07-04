@@ -9,6 +9,7 @@ from app import db
 
 from app.mod_interaction.models import User
 import requests
+import requests.exceptions
 
 parser = reqparse.RequestParser(trim=True)
 
@@ -52,15 +53,18 @@ class SyllabusResource(Resource):
 
     def post(self):
         args = parser.parse_args()
-        r = requests.post(SyllabusResource.SYLLABUS_API_URL,
-                             data=args)
-        result = r.json()
-        if "token" in result:
-            ret = new_or_update_user(args["username"], result["token"])
-            if ret != False:
-                # 添加 user_id 到 result 里面
-                result["user_id"] = ret.id
-                result["avatar"] = ret.image
-                result["nickname"] = ret.nickname
+        try:
+            r = requests.post(SyllabusResource.SYLLABUS_API_URL,
+                                 data=args)
+            result = r.json()
+            if "token" in result:
+                ret = new_or_update_user(args["username"], result["token"])
+                if ret != False:
+                    # 添加 user_id 到 result 里面
+                    result["user_id"] = ret.id
+                    result["avatar"] = ret.image
+                    result["nickname"] = ret.nickname
 
-        return result
+            return result
+        except requests.exceptions.ConnectionError:
+            return {"error": "connection refused"}, 400
