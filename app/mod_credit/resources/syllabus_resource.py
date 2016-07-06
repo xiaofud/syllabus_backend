@@ -46,7 +46,7 @@ def new_or_update_user(account, token):
 
 class SyllabusResource(Resource):
 
-    SYLLABUS_API_URL = "http://121.42.175.83:8084/syllabus"
+    SYLLABUS_API_URL = "http://127.0.0.1:8084/syllabus"
 
     def get(self):
         return {"error": "method not allowed"}, 405

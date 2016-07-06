@@ -17,7 +17,7 @@ class ClassMember(Resource):
             "class_id": args["class_id"]
         }
         try:
-            resp = requests.get("http://121.42.175.83:8084/api/v1.0/member", params=params)
+            resp = requests.get("http://127.0.0.1:8084/api/v1.0/member", params=params)
             return resp.json()
         except requests.exceptions.ConnectionError:
             return {"error": "connection refused"}, 400
