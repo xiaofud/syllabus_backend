@@ -124,40 +124,5 @@ MULTIPLE_USERS_INITIAL_KWARGS = {
     GenericMultipleResource.ENVELOPE: "post_list"
 }
 
-# class PostResource(Resource):
-#
-#
-#
-#     def get(self, id=None):
-#         if id is None:
-#             return {"error": "bad request"}, 401
-#         post = post_operation.get_post_by_id(id)
-#         if post is None:
-#             return {"error": "invalid id"}, 404    # not found
-#         return marshal(post, structure), 200
-#
-#     # curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X POST -d '{"title": "testing_title", "content": "haha", "description": "click me", "uid": 1, "post_type": 1}'
-#     def post(self):
-#         args = basic_parser.parse_args()
-#         helpers.clean_arguments(args, PostResource.POST_ACCEPT_VARIABLES)
-#         result = post_operation.new_post(**args)
-#         if result != False:
-#             return {"id": result}, 201  # crated
-#         else:
-#             return {"error": "failed"}, 500 # Internal Server Error
-#
-#     # curl localhost:8080/interaction/api/v2/post -i --header "Content-type: application/json" -X PUT -d '{"title": "testing_title", "content": "haha", "id": 2, "description": "do not click me", "uid": 1, "post_type": 1}'
-#     def put(self):
-#         args = put_parser.parse_args()
-#         helpers.clean_arguments(args, PostResource.PUT_ACCEPT_VARIABLES)
-#         id = args.pop("id")
-#         result = post_operation.update_post_by_id(id, **args)
-#         if result == True:
-#             return {"status": "updated"}, 200
-#         else:
-#             if result[1] == post_operation.common.ERROR_NOT_FOUND:
-#                 return {"error": "post not found"}, 404
-#             else:
-#                 return {"error": "failed"}, 500 # Internal Server Error
 
 

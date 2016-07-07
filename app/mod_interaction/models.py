@@ -23,6 +23,10 @@ class User(db.Model):
     USER_NOT_FORBIDDEN = 1
     USER_FORBIDDEN = 0
 
+    LEVEL_NORMAL = 0    # 普通权限
+    LEVEL_CAN_POST_ACTIVITY = 1 # 可以发布活动信息
+    LEVEL_MANAGER = 2   # 管理员权限, 可以删除任意信息
+
 
     __tablename__ = "users" # 表名
 
@@ -56,6 +60,9 @@ class User(db.Model):
     # 是否对外部可见
     visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
 
+    # 记录用户权限
+    level = db.Column(db.SMALLINT, default=LEVEL_NORMAL)
+
     # ========== 关系 ==========
 
     # 该用户做出过的评论
@@ -71,6 +78,8 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User %r %r %r>" % (self.account, self.nickname, self.token)
+
+
 
 # 互动区域的吹水, 或者活动发布都可以
 class Post(db.Model):

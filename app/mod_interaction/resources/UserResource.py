@@ -14,7 +14,8 @@ SINGLE_USER_STRUCTURE = {
     "gender": fields.Integer,
     "birthday": fields.String,
     "profile": fields.String,
-    "image": fields.String
+    "image": fields.String,
+    "level": fields.Integer
     # "token": fields.String
     # "thumb_ups": fields.List(fields.Nested(ThumbUpResource.structure))
 }
