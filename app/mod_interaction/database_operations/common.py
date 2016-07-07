@@ -246,16 +246,16 @@ def delete_from_db(db, model, id, uid):
     :return:
     """
     thing = query_single_by_id(model, id)
-    the_user = query_single_by_id(User, uid)
+    # the_user = query_single_by_id(User, uid)
     # print(thing)
     # print(the_user)
-    if thing is None or the_user is None:
+    if thing is None:
         return False, ERROR_NOT_FOUND
     # print("checking")
     # 检查有没有权限删除
     super_users = User.query.with_entities(User.id).filter_by(level=User.LEVEL_MANAGER).all()
     super_ids = [user.id for user in super_users]
-    if thing.uid != uid and not the_user.uid in super_ids:
+    if thing.uid != uid and not uid in super_ids:
         return False, ERROR_USER_ID_CONFLICT
     try:
         if hasattr(thing, "visibility"):
