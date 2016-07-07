@@ -253,7 +253,9 @@ def delete_from_db(db, model, id, uid):
         return False, ERROR_NOT_FOUND
     # print("checking")
     # 检查有没有权限删除
-    if thing.uid != uid and not the_user.account in config["ADMINISTRATION"]:
+    super_users = User.query.with_entities(User.id).filter_by(level=User.LEVEL_MANAGER).all()
+    super_ids = [user.id for user in super_users]
+    if thing.uid != uid and not the_user.uid in super_ids:
         return False, ERROR_USER_ID_CONFLICT
     try:
         if hasattr(thing, "visibility"):

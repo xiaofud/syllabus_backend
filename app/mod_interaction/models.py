@@ -90,6 +90,10 @@ class Post(db.Model):
     # 宣传活动性质的(公众号推文)
     POST_TYPE_ACTIVITY = 1  # 如果是这种类型的话, 那么客户端处理的时候就要注意把content作为文章的URL
 
+    # 校园活动的文章, 类似于推文
+    # content视为URL, description为描述信息
+    POST_TYPE_SCHOOL_ACTIVITY = 2
+
     __tablename__ = "posts"
 
     # 主键
