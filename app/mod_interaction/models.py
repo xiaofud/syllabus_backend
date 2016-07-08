@@ -115,7 +115,7 @@ class Post(db.Model):
     photo_list_json = db.Column(db.TEXT)
 
     # 发布时间
-    post_time = db.Column(db.TIMESTAMP, nullable=False)
+    post_time = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
 
     # 发布者(外键)
     uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
@@ -153,7 +153,7 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     # 评论时间, 自动更新
-    post_time = db.Column(db.TIMESTAMP, nullable=False)
+    post_time = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
 
     # 评论内容
     comment = db.Column(db.String(140))
@@ -180,7 +180,7 @@ class ThumbUp(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     # 评论时间, 自动更新
-    post_time = db.Column(db.TIMESTAMP, nullable=False)
+    post_time = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
 
     # 点赞的对象
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)

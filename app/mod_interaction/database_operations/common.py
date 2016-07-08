@@ -5,7 +5,7 @@ __author__ = 'smallfly'
 
 from app.mod_interaction.models import User, VISIBILITY_VISIBLE, VISIBILITY_INVISIBLE, Comment
 from app.mod_interaction.database_operations.comment_operation import new_unread
-from config import config
+# from config import config
 
 # 一些错误常量
 ERROR_NOT_FOUND = 1
