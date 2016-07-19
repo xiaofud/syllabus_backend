@@ -194,6 +194,75 @@ class ThumbUp(db.Model):
     def __repr__(self):
         return "<ThumbUp from {} to {}>".format(self.user.account, self.post.title)
 
+class Carpool(db.Model):
+
+    """
+    拼车信息
+    """
+
+    __tablename__ = "carpools"
+
+    # 主键
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # 发起拼车的童鞋
+    uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    # 司机信息
+    driver = db.Column(db.VARCHAR(50), nullable=True)
+
+    # 自己的联系方式
+    contact = db.Column(db.VARCHAR(200), nullable=True)
+
+    # 出发地
+    source = db.Column(db.VARCHAR(50), nullable=False)
+
+    # 目的地
+    destination = db.Column(db.VARCHAR(50), nullable=False)
+
+    # 出发时间
+    departure_time = db.Column(db.TIMESTAMP, default=None)
+
+    # 备注
+    notice = db.Column(db.VARCHAR(200))
+
+    # 最多允许几个人拼车, 默认4人
+    max_people = db.Column(db.SMALLINT, default=4)
+
+    # 目前拼车人数
+    people_count = db.Column(db.SMALLINT, default=1)
+
+
+    def __repr__(self):
+        return "<Carpool uid: {} {}/{}".format(self.uid, self.people_count, self.max_people)
+
+
+class Passenger(db.Model):
+
+    """
+    拼车的用户
+    """
+
+    __tablename__ = "passengers"
+
+    # 主键
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # 发起拼车的童鞋
+    uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    # 拼车信息id
+    carpool_id = db.Column(db.Integer, db.ForeignKey("carpools.id"), nullable=False)
+
+    # join time
+    join_time = db.Column(db.TIMESTAMP, default=None)
+
+    # 自己的联系方式(用json方式存储)
+    contact = db.Column(db.VARCHAR(200), nullable=True)
+
+    def __repr__(self):
+        return "<Passenger uid:{} contact:{}".format(self.uid, self.contact)
+
 # 未读资源
 class UnRead(db.Model):
     """
