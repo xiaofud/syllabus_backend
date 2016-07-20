@@ -11,6 +11,7 @@ app = Flask(__name__, static_folder='static')
 app.config.update(config.config)
 # 设置 mysql 编码为 utf8mb4
 app.config['MYSQL_DATABASE_CHARSET'] = 'utf8mb4'
+app.config["SQLALCHEMY_ECHO"] = True
 db = SQLAlchemy(app)
 
 

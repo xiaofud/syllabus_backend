@@ -28,6 +28,8 @@ from app.mod_interaction.resources.BannerResource import BannerResource
 from app.mod_interaction.resources.UserResource import CompatibleUserResource
 from app.mod_interaction.resources.LatestResource import LatestResource
 from app.mod_interaction.resources.UnreadResource import UnreadResource
+from app.mod_interaction.resources.CarpoolResource import CarpoolsResource, CarpoolResource
+from app.mod_interaction.resources.PassengerResource import PassengerResource
 
 # views
 from app.mod_interaction.views import BannerView
@@ -82,6 +84,14 @@ api.add_resource(LatestResource, "/latest", "/latest/", endpoint="latest")
 
 # ================= 获取未读消息 =================
 api.add_resource(UnreadResource, "/unread", "/unread/", endpoint="unread")
+
+# ================= 拼车消息 =================
+# curl "localhost:8080/interaction/api/v2/carpools?sort_by=name&sort_by=age&order=desc&order=asc"
+api.add_resource(CarpoolsResource, "/carpools", "/carpools/", endpoint="carpools")
+
+api.add_resource(CarpoolResource, "/carpool", "/carpool/", endpoint="carpool")
+
+api.add_resource(PassengerResource, "/passenger", "/passenger/", endpoint="passenger")
 
 
 # ============== 添加views ==============

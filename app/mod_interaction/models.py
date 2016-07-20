@@ -232,6 +232,8 @@ class Carpool(db.Model):
     # 目前拼车人数
     people_count = db.Column(db.SMALLINT, default=1)
 
+    # JOIN
+    passengers = db.relationship("Passenger", backref="carpool", lazy="dynamic")
 
     def __repr__(self):
         return "<Carpool uid: {} {}/{}".format(self.uid, self.people_count, self.max_people)
