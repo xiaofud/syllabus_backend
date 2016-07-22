@@ -31,20 +31,39 @@ class CarpoolResource(Resource):
     单个拼车信息
     """
 
+    QUERY_BY_ID = 0 # 根据id获取拼车信息
+    QUERY_BY_USER_ID = 1    # 根据用户获取拼车信息
+
     GET_PARSER = RequestParser(trim=True)
     POST_PARSER = RequestParser(trim=True)
     PUT_PARSER = RequestParser(trim=True)
     DELETE_PARSER = RequestParser(trim=True)
 
     def get(self):
+        # 决定搜索类型
+        self.GET_PARSER.add_argument("type", type=int, location="args")
         self.GET_PARSER.add_argument("id", required=True, type=int, location="args")
+
         args = self.GET_PARSER.parse_args()
+        # 默认按照拼车id寻找
+        type_ = args["type"] or self.QUERY_BY_ID
         id_ = args['id']
-        carpool = common.query_single_by_id(models.Carpool, id_)
-        if carpool is not None:
-            return marshal(carpool, CARPOOL_STRUCTURE)
+
+        if type_ == self.QUERY_BY_ID:
+            carpool = common.query_single_by_id(models.Carpool, id_)
+            if carpool is not None:
+                return marshal(carpool, CARPOOL_STRUCTURE)
+            else:
+                return {"error": "not found"}, 404
         else:
-            return {"error": "not found"}, 404
+            carpools = models.Carpool.query\
+                .join(models.Passenger, models.Carpool.id == models.Passenger.carpool_id)\
+                .filter(models.Passenger.uid == id_)\
+                .all()
+            if len(carpools) == 0:
+                return {"error": "not found"}, 404
+            else:
+                return marshal(carpools, CARPOOL_STRUCTURE)
 
 
     def post(self):
