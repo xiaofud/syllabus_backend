@@ -87,7 +87,7 @@ class Post(db.Model):
     # 话题, 用户自发的
     POST_TYPE_TOPIC = 0
 
-    # 宣传活动性质的(公众号推文)
+    # (公众号推文)
     POST_TYPE_ACTIVITY = 1  # 如果是这种类型的话, 那么客户端处理的时候就要注意把content作为文章的URL
 
     # 校园活动的文章, 类似于推文
@@ -110,6 +110,9 @@ class Post(db.Model):
 
     # 内容
     content = db.Column(db.TEXT)
+
+    activity_start_time = db.Column(db.TIMESTAMP, nullable=True)
+    activity_end_time = db.Column(db.TIMESTAMP, nullable=True)
 
     # 用户同时上传的图片列表, 存储原始的json数据
     photo_list_json = db.Column(db.TEXT)
