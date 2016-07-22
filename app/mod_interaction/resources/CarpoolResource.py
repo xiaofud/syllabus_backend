@@ -11,6 +11,7 @@ from app import db
 
 import time
 
+# 返回的JSON结构
 CARPOOL_STRUCTURE = {
     "id": fields.Integer,
     "uid": fields.Integer,
@@ -40,6 +41,15 @@ class CarpoolResource(Resource):
     DELETE_PARSER = RequestParser(trim=True)
 
     def get(self):
+        """
+        获取拼车信息
+        API请求地址:
+        /interaction/api/v2/carpool
+        方法: GET
+        参数:
+        type 可选, 默认为0, 位置: query参数, 0 表示按照拼车id获取拼车信息(即返回指定的单个拼车信息)
+        id  位置: query参数, 值意为用户的uid, 或者拼车信息的id(由参数type决定)
+        """
         # 决定搜索类型
         self.GET_PARSER.add_argument("type", type=int, location="args")
         self.GET_PARSER.add_argument("id", required=True, type=int, location="args")
@@ -67,6 +77,25 @@ class CarpoolResource(Resource):
 
 
     def post(self):
+        """
+        发布拼车信息
+        API请求地址:
+        /interaction/api/v2/carpool
+        方法: POST
+        参数: 所有参数位置为form, 即 URL-ENCODED 的字符串
+        必选参数:
+            uid 发布拼车信息的用户的id
+            token 用户的token
+            departure_time 发车时间, 为[时间戳]
+            driver 司机信息, 字符串
+            contact 用户自己的联系信息, 存储JSON字符串, 和iOS端沟通好结构
+                例: {"wechat": "xxx", "phone": xxx} 等, 方便用于复制联系信息到剪贴板
+            source 出发地点
+            destination 目的地
+            max_people 这辆车最多能坐多少人
+        可选参数:
+            notice 备注信息, 如哪里集合之类的
+        """
 
         # 验证信息
         self.POST_PARSER.add_argument("uid", type=int, required=True, location="form")
@@ -110,6 +139,28 @@ class CarpoolResource(Resource):
             return {"error": "Internal Server Error"}, 500
 
     def put(self):
+
+        """
+        更新拼车信息
+        API请求地址:
+        /interaction/api/v2/carpool
+        方法: PUT
+        参数: 所有参数位置为form, 即 URL-ENCODED 的字符串
+        必选参数:
+            id 拼车信息的id
+            uid 发布拼车信息的用户的id
+            token 用户的token
+            departure_time 发车时间, 为[时间戳]
+            driver 司机信息, 字符串
+            contact 用户自己的联系信息, 存储JSON字符串, 和iOS端沟通好结构
+                例: {"wechat": "xxx", "phone": xxx} 等, 方便用于复制联系信息到剪贴板
+            source 出发地点
+            destination 目的地
+            max_people 这辆车最多能坐多少人
+        可选参数:
+            notice 备注信息, 如哪里集合之类的
+        """
+
         # 验证信息
         self.PUT_PARSER.add_argument("uid", type=int, required=True, location="form")
         self.PUT_PARSER.add_argument("token", required=True, location="form")
@@ -156,6 +207,18 @@ class CarpoolResource(Resource):
                 return {"error": "Internal Server Error"}, 500
 
     def delete(self):
+        """
+        删除拼车信息
+        API请求地址:
+        /interaction/api/v2/carpool
+        方法: DELETE
+        参数: 所有参数位于请求头部
+        必选参数:
+            id 拼车信息的id
+            uid 发布拼车信息的用户id(发布者才有权删除)
+            token 用户的token
+        """
+
         self.DELETE_PARSER.add_argument("id", type=int, required=True, location="headers")
         self.DELETE_PARSER.add_argument("uid", type=int, required=True, location="headers")
         self.DELETE_PARSER.add_argument("token", required=True, location="headers")
@@ -185,12 +248,14 @@ class CarpoolSResource(Resource):
     """
 
     # 有无司机
-    HAS_DRIVER = 1
-    HAS_NOT_DRIVER = 2
+    # HAS_DRIVER = 1
+    # HAS_NOT_DRIVER = 2
 
     GET_PARSER = RequestParser(trim=True)
 
     def query(self, arg_dict):
+
+
         # 分页 http://my.oschina.net/ranvane/blog/196906
 
         # 按照各种条件搜索拼车
@@ -226,9 +291,15 @@ class CarpoolSResource(Resource):
 
     def get(self):
         """
-        可有多种条件组合搜索, 注意排序
-        时间|有无司机|人数
-        :return:
+        更新拼车信息
+        API请求地址:
+        /interaction/api/v2/carpools
+        方法: GET
+        参数: 所有参数为query参数
+        可选参数:
+            depart_time 出发时间戳, 返回结果中将只会返回出发时间等于或者大于这个时间的拼车信息
+            page_index 页数
+            page_size 一页返回的数量
         """
         self.GET_PARSER.add_argument("depart_time", type=int, location="args")
         # DRIVER 由客户端判断

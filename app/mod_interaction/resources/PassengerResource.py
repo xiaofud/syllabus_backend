@@ -10,6 +10,7 @@ from app import db
 
 import time
 
+# 返回的JSON结构
 PASSENGER_STRUCTURE = {
     # # 主键
     # id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -41,6 +42,15 @@ class PassengerResource(Resource):
     DELETE_PARSER = RequestParser(trim=True)
 
     def get(self):
+        """
+        获取拼车的人的信息
+        API请求地址:
+        /interaction/api/v2/passenger
+        方法: GET
+        参数:
+        必选参数:
+            id 乘客的id
+        """
         self.GET_PARSER.add_argument("id", required=True, type=int, location="args")
 
         args = self.GET_PARSER.parse_args()
@@ -51,6 +61,19 @@ class PassengerResource(Resource):
         return marshal(passenger, PASSENGER_STRUCTURE)
 
     def post(self):
+        """
+        加入某个拼车
+        API请求地址:
+        /interaction/api/v2/passenger
+        方法: POST
+        参数: 参数位置为form
+        必选参数:
+            carpool_id 已经存在的某个拼车id
+            uid 用户id
+            token 用户token
+            contact 用户自己的联系信息, 存储JSON字符串, 和iOS端沟通好结构
+                例: {"wechat": "xxx", "phone": xxx} 等, 方便用于复制联系信息到剪贴板
+        """
         self.POST_PARSER.add_argument("contact", required=True, location="form")
         # self.POST_PARSER.add_argument("id", type=int, required=True, location="form")
         self.POST_PARSER.add_argument("carpool_id", type=int, required=True, location="form")
@@ -93,6 +116,21 @@ class PassengerResource(Resource):
             return {"error": "Internal Server Error"}, 500
 
     def put(self):
+        """
+        修改自己的联系方式
+        API请求地址:
+        /interaction/api/v2/passenger
+        方法: PUT
+        参数: 参数位置为form
+        必选参数:
+            id 乘客id
+            carpool_id 已经存在的某个拼车id
+            uid 用户id
+            token 用户token
+            contact 用户自己的联系信息, 存储JSON字符串, 和iOS端沟通好结构
+                例: {"wechat": "xxx", "phone": xxx} 等, 方便用于复制联系信息到剪贴板
+        """
+
         # 用于更新信息, 只允许修改contact信息
         self.PUT_PARSER.add_argument("id", type=int, required=True, location="form")
         # self.PUT_PARSER.add_argument("carpool_id", type=int, required=True, location="form")
@@ -120,6 +158,17 @@ class PassengerResource(Resource):
             return {"error": "Internal Server Error"}, 500
 
     def delete(self):
+        """
+        退出某个拼车
+        API请求地址:
+        /interaction/api/v2/passenger
+        方法: DELETE
+        参数: 位于请求报头
+        必选参数:
+            id 乘客id
+            uid 用户id
+            token 用户token
+        """
         self.DELETE_PARSER.add_argument("id", type=int, required=True, location="headers")
         self.DELETE_PARSER.add_argument("uid", type=int, required=True, location="headers")
         self.DELETE_PARSER.add_argument("token", required=True, location="headers")
