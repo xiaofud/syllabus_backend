@@ -321,7 +321,7 @@ class CarpoolSResource(Resource):
 
         carpools = self.query(args)
 
-        print(len(carpools))
+        # print(len(carpools))
 
         if len(carpools) > 0:
             return marshal(carpools, CARPOOL_STRUCTURE)

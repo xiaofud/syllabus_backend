@@ -30,6 +30,7 @@ from app.mod_interaction.resources.LatestResource import LatestResource
 from app.mod_interaction.resources.UnreadResource import UnreadResource
 from app.mod_interaction.resources.CarpoolResource import CarpoolSResource, CarpoolResource
 from app.mod_interaction.resources.PassengerResource import PassengerResource
+from app.mod_interaction.resources.ActivityResource import ActivityResource
 
 # views
 from app.mod_interaction.views import BannerView
@@ -92,7 +93,11 @@ api.add_resource(CarpoolSResource, "/carpools", "/carpools/", endpoint="carpools
 api.add_resource(CarpoolResource, "/carpool", "/carpool/", endpoint="carpool")
 
 api.add_resource(PassengerResource, "/passenger", "/passenger/", endpoint="passenger")
+# ================= 拼车消息 =================
 
+# ================= 活动消息 =================
+api.add_resource(ActivityResource, "/activity", "/activity/", endpoint="activity")
+# ================= 活动消息 =================
 
 # ============== 添加views ==============
 

@@ -10,17 +10,17 @@ from app.mod_interaction.database_operations import common
 from app.mod_interaction.models import Post
 # from app.mod_interaction.resources import ThumbUpResource
 
-__thumb_ups_structure = {
+thumb_ups_structure = {
     "id": fields.Integer,   # 该赞的id, 方便用于取消
     "uid": fields.Integer,  # 点赞的人
 }
 
-__comment_structure = {
+comment_structure = {
     "id": fields.Integer,   # 评论的id, 用于删除
     "uid": fields.Integer,  # 发布评论的用户id
 }
 
-__user_structure = {
+user_structure = {
     "id": fields.Integer,
     "image": fields.String,
     "nickname": fields.String,
@@ -34,10 +34,10 @@ SINGLE_POST_STRUCTURE = {
     "content": fields.String,
     "post_time": fields.String,
     "source":fields.String,
-    "user": fields.Nested(__user_structure),
+    "user": fields.Nested(user_structure),
     "description": fields.String,
-    "thumb_ups": fields.List(fields.Nested(__thumb_ups_structure)),
-    "comments": fields.List(fields.Nested(__comment_structure)),
+    "thumb_ups": fields.List(fields.Nested(thumb_ups_structure)),
+    "comments": fields.List(fields.Nested(comment_structure)),
     "photo_list_json": fields.String
 }
 

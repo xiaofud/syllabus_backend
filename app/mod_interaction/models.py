@@ -102,17 +102,12 @@ class Post(db.Model):
     # 类型
     post_type = db.Column(db.SMALLINT, nullable=False)
 
-    # 标题
-    # title = db.Column(db.String(40))
-
     # 描述信息(比如说公众号的推文的描述信息)
     description = db.Column(db.String(140))
 
     # 内容
     content = db.Column(db.TEXT)
 
-    activity_start_time = db.Column(db.TIMESTAMP, nullable=True)
-    activity_end_time = db.Column(db.TIMESTAMP, nullable=True)
 
     # 用户同时上传的图片列表, 存储原始的json数据
     photo_list_json = db.Column(db.TEXT)
@@ -120,14 +115,24 @@ class Post(db.Model):
     # 发布时间
     post_time = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
 
-    # 发布者(外键)
-    uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-
     # 是否对外部可见
     visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
 
-    # 记录客户端系统, 如 iOS android
+    # 记录客户端系统, 如 iOS android, 也可以记录活动部门
     source = db.Column(db.VARCHAR(20), nullable=True)
+
+    # =========== 活动相关 ===========
+    # 活动开始时间
+    activity_start_time = db.Column(db.TIMESTAMP, nullable=True)
+    # 活动结束时间
+    activity_end_time = db.Column(db.TIMESTAMP, nullable=True)
+    # 活动地点
+    activity_location = db.Column(db.VARCHAR(40), nullable=True)
+
+    # =========== 活动相关 ===========
+
+    # 发布者(外键)
+    uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     # ========== 关系 ==========
 
