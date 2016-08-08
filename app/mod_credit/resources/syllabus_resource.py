@@ -64,6 +64,8 @@ class SyllabusResource(Resource):
                     result["user_id"] = ret.id
                     result["avatar"] = ret.image
                     result["nickname"] = ret.nickname
+                    # 用户等级
+                    result["level"] = ret.level
 
             return result
         except requests.exceptions.ConnectionError:

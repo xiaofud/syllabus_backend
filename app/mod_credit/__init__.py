@@ -9,6 +9,7 @@ from app.mod_credit.resources.syllabus_resource import SyllabusResource
 from app.mod_credit.resources.exam_resource import ExamResource
 from app.mod_credit.resources.grade_resource import GradeResource
 from app.mod_credit.resources.oa_resource import OAResource
+from app.mod_credit.resources.wechat_auth_resource import WechatAuthResource
 from flask_restful import Api
 
 credit_blueprint = Blueprint("credit_blueprint", __name__, url_prefix="/credit")
@@ -24,3 +25,5 @@ api.add_resource(ExamResource, "/exam", "/exam/", endpoint="exam")
 api.add_resource(GradeResource, "/grade", "/grade/", endpoint="grade")
 
 api.add_resource(OAResource, "/oa", "/oa/", endpoint="oa")
+
+api.add_resource(WechatAuthResource, "/auth", "/auth/", endpoint="auth")
