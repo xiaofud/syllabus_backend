@@ -57,7 +57,7 @@ class ActivityResource(Resource):
         """
         self.get_parser = RequestParser(trim=True)
         self.get_parser.add_argument("type", type=int, location="args")
-        self.get_parser.add_argument("timestamp", type=int, location="args")
+        self.get_parser.add_argument("activity_start_time", type=int, location="args")
         # 用于分页
         self.get_parser.add_argument("page_index", type=int, location="args")
         # 用于分页
@@ -92,7 +92,7 @@ class ActivityResource(Resource):
         # 这里可以不用管post_type参数, 保留同之前API兼容, 提高复用
         self.post_parser.add_argument("post_type", type=int, required=True, location="json")
         self.post_parser.add_argument("activity_start_time", type=int, required=True, location="json")
-        self.post_parser.add_argument("activity_end_time", type=int, required=True, location="json")
+        self.post_parser.add_argument("activity_end_time", type=int, location="json")
 
 
         self.post_parser.add_argument("activity_location", required=False, location="json")
