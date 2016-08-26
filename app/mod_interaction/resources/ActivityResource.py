@@ -43,12 +43,21 @@ class ActivityResource(Resource):
         请求方法: GET
         参数:
             可选参数:
-                activity_start_time 活动开始的时间戳
+                type 整型值,
+                    0(默认值) 表示结果按照活动开始时间排序返回
+                    1 表示结果按照发布时间排序返回
+                activity_start_time 时间戳
+                    type 为 0 时才有意义
+                    表示服务器根据activity_start_time为界限,
+                    比如activity_start_time为 2016/8/16 那么返回的活动将会是
+                    那些已经开始了但是开始时间晚于或者等于2016/8/16的活动
+                    以及未来的并未开始的活动
                 page_index 页码
                 page_size 每页的结果数
         """
         self.get_parser = RequestParser(trim=True)
-        self.get_parser.add_argument("activity_start_time", type=int, location="args")
+        self.get_parser.add_argument("type", type=int, location="args")
+        self.get_parser.add_argument("timestamp", type=int, location="args")
         # 用于分页
         self.get_parser.add_argument("page_index", type=int, location="args")
         # 用于分页
@@ -94,12 +103,14 @@ class ActivityResource(Resource):
     def query(self, arg_dict):
         # 分页 http://my.oschina.net/ranvane/blog/196906
 
-        # 按照各种条件搜索拼车
-        # query_obj = models.Carpool.query
-
         # 读取条件
-        now = helpers.timestamp_to_string(int(time.time()))
+
+        # 读取类型
+        # 默认值为0
+        type_ = arg_dict["type"] or 0
+
         # 设置时间条件
+        now = helpers.timestamp_to_string(int(time.time()))
         start_time = arg_dict["activity_start_time"] or now
 
         # print(depart_time)
@@ -108,12 +119,21 @@ class ActivityResource(Resource):
 
         page_size = arg_dict["page_size"] or 10
 
-        page_obj = \
-            models.Post.query\
-                .filter(models.Post.post_type == models.Post.POST_TYPE_SCHOOL_ACTIVITY)\
-                .filter(models.Post.activity_start_time >= start_time)\
-                .order_by(models.Post.activity_start_time.asc())\
-                .paginate(page_index, page_size, False)
+        if type_ == 0:
+            # 按照活动开始时间排序
+            page_obj = \
+                models.Post.query\
+                    .filter(models.Post.post_type == models.Post.POST_TYPE_SCHOOL_ACTIVITY)\
+                    .filter(models.Post.activity_start_time >= start_time)\
+                    .order_by(models.Post.activity_start_time.asc())\
+                    .paginate(page_index, page_size, False)
+        else:
+            # 按照发布时间排序
+            page_obj = \
+                models.Post.query\
+                    .filter(models.Post.post_type == models.Post.POST_TYPE_SCHOOL_ACTIVITY)\
+                    .order_by(models.Post.id.desc())\
+                    .paginate(page_index, page_size, False)
 
         activities = page_obj.items
 
