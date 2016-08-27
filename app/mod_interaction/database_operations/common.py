@@ -90,6 +90,9 @@ def query_multiple(model, **kwargs):
     # 用于分段获取
     query = query.filter(model.id < before_id)
 
+    if hasattr(model, "post_type"):
+        query = query.filter(model.post_type != 2)
+
     if field is not None:
         if not hasattr(model, field):
             # 即错误的参数

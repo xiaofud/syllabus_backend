@@ -119,6 +119,8 @@ class ActivityResource(Resource):
 
         page_size = arg_dict["page_size"] or 10
 
+        print("type: {} index: {} size: {}".format(type_, page_index, page_size))
+
         if type_ == 0:
             # 按照活动开始时间排序
             page_obj = \
