@@ -127,6 +127,7 @@ class ActivityResource(Resource):
                 models.Post.query\
                     .filter(models.Post.post_type == models.Post.POST_TYPE_SCHOOL_ACTIVITY)\
                     .filter(models.Post.activity_start_time >= start_time)\
+                    .filter(models.Post.visibility == models.VISIBILITY_VISIBLE)\
                     .order_by(models.Post.activity_start_time.asc())\
                     .paginate(page_index, page_size, False)
         else:
@@ -134,6 +135,7 @@ class ActivityResource(Resource):
             page_obj = \
                 models.Post.query\
                     .filter(models.Post.post_type == models.Post.POST_TYPE_SCHOOL_ACTIVITY)\
+                    .filter(models.Post.visibility == models.VISIBILITY_VISIBLE)\
                     .order_by(models.Post.id.desc())\
                     .paginate(page_index, page_size, False)
 
