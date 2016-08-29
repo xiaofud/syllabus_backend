@@ -200,7 +200,7 @@ class ThumbUp(db.Model):
     # visibility = db.Column(db.SMALLINT, default=VISIBILITY_VISIBLE)
 
     def __repr__(self):
-        return "<ThumbUp from {} to {}>".format(self.user.account, self.post.title)
+        return "<ThumbUp from {} to {}>".format(self.user.account, self.post.description)
 
 class Carpool(db.Model):
 

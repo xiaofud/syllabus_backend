@@ -15,8 +15,8 @@ app.config["SQLALCHEMY_ECHO"] = True
 db = SQLAlchemy(app)
 
 
-# from app.mod_admin.admin_manager import admin
-# admin.init_app(app)
+from app.mod_admin.admin_manager import admin
+admin.init_app(app)
 
 # 注意要等db已经建立好之后, 再去import blueprint, 因为blueprint里面需要app的db
 # 注册blueprint
