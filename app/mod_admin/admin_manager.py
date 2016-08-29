@@ -12,6 +12,8 @@ class UserModelView(ModelView):
 
     column_list = ('id', "account", "visibility", 'level', 'image', "token")
 
+    column_default_sort = ('id', True)
+
     column_labels = {
         "id": "用户UID",
         "account": "账号名",
@@ -42,6 +44,8 @@ class PostModelView(ModelView):
     )
 
     column_searchable_list = ("id", "uid", "description", "content", "source")
+
+    column_default_sort = ('id', True)
 
     column_labels = {
         "id": "序号",
