@@ -43,7 +43,8 @@ class UploadBannerView(View):
             filename = "banner_" + str(int(time.time())) + extension
             try:
                 file.save(os.path.join(app.config["BANNER_UPLOAD_DIR"], filename))
-                return jsonify(URL=filename)
+                url = "http://119.29.95.245:8000/" + filename
+                return jsonify(status="succeed", URL=url)
             except Exception as e:
                 print(e)
                 return jsonify(ERROR=str(e))
