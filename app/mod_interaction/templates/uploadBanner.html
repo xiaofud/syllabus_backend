@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>设置banners</title>
+    <!-- 引入库-->
+    <script src="{{ url_for('static', filename='bootstrap-3.3.5-dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery-2.2.0.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.5-dist/css/bootstrap.min.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <h1>上传Banner</h1>
+            <h4>文件名不能有中文</h4>
+            <h4>文件大小不超过1MB</h4>
+            <h4>尺寸 640 × 360</h4>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-3 col-md-6">
+                <form method="POST" enctype="multipart/form-data" action="">
+
+                    <div class="form-group form-group-sm">
+                        <input type="file" name="image" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">上传</button>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>

@@ -62,4 +62,4 @@ class PostModelView(ModelView):
 
 admin = Admin(name="课程后台管理", template_mode='bootstrap3')
 admin.add_view(UserModelView(models.User, db.session, "用户管理"))
-admin.add_view(PostModelView(models.Post, db.session, "推文管理"))
+admin.add_view(PostModelView(models.Post, db.session, "动态管理"))

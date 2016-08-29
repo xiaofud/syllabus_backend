@@ -8,15 +8,6 @@
     <script src="{{ url_for('static', filename='bootstrap-3.3.5-dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='jquery-2.2.0.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.5-dist/css/bootstrap.min.css') }}">
-{#    <script src="/app/static/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>#}
-{#    <script src="/app/static/jquery-2.2.0.min.js"></script>#}
-{#    <link rel="stylesheet" href="/app/static/bootstrap-3.3.5-dist/css/bootstrap.min.css">#}
-
-{#    <script src="/syllabus_backend/app/static/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>#}
-{#    <script src="/syllabus_backend/app/static/jquery-2.2.0.min.js"></script>#}
-{#    <link rel="stylesheet" href="/syllabus_backend/app/static/bootstrap-3.3.5-dist/css/bootstrap.min.css">#}
-
-    <!-- 引入库-->
 
 </head>
 <body>
@@ -25,6 +16,20 @@
         <div class="jumbotron">
             <h1>修改课程表显示的banner</h1>
         </div>
+
+        <div class="row">
+            <div class="col-md-offset-3 col-md-6">
+                <ol class="list-group">
+                    <li class="list-group-item">
+                        <a target="_blank" href="http://119.29.95.245:8000">查看服务器上的图片</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a target="_blank" href="upload">上传新的图片到服务器上</a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
         <div id="banners" class="row">
             <div class="col-md-offset-3 col-md-6">
                 <form method="POST" action="">

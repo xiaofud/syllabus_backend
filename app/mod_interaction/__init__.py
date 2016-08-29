@@ -33,7 +33,7 @@ from app.mod_interaction.resources.PassengerResource import PassengerResource
 from app.mod_interaction.resources.ActivityResource import ActivityResource
 
 # views
-from app.mod_interaction.views import BannerView
+from app.mod_interaction.views import BannerView, UploadBannerView
 
 from flask_restful import Api
 
@@ -102,4 +102,5 @@ api.add_resource(ActivityResource, "/activity", "/activity/", endpoint="activity
 # ============== 添加views ==============
 
 interaction_blueprint.add_url_rule("/banners", view_func=BannerView.as_view("banners"))
+interaction_blueprint.add_url_rule("/upload", view_func=UploadBannerView.as_view("upload"))
 
