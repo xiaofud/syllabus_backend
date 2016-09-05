@@ -66,6 +66,9 @@ class SyllabusResource(Resource):
                     result["nickname"] = ret.nickname
                     # 用户等级
                     result["level"] = ret.level
+            elif "ERROR" in result:
+                # 表明出错了
+                return result, 500
 
             return result
         except requests.exceptions.ConnectionError:
