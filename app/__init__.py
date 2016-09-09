@@ -26,6 +26,9 @@ from app.mod_credit import credit_blueprint
 app.register_blueprint(interaction_blueprint)
 app.register_blueprint(credit_blueprint)
 
+# 导入views
+from app import views
+
 # 404
 @app.errorhandler(404)
 def not_found(e):
