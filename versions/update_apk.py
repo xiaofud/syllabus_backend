@@ -69,9 +69,9 @@ def update_release_note():
         "versionName": "版本名称",
         "versionReleaser": "发布者",
         "apk_file_name": "apk文件名",
-        # "description": "版本描述信息"
+        "download_address": "下载地址"
     }
-
+    print("description will be loaded using file:", DESCRIPTION_FILENAME, "by default")
     for key in note:
         # 输出提示信息同时改变键值
         note[key] = input(note[key] + ":\n")
@@ -85,7 +85,7 @@ def update_release_note():
 
     # 添加一些其他信息
     note["versionDate"] = int(time.time())
-    note["download_address"] = DOWNLOAD_ADDRESS
+    # note["download_address"] = DOWNLOAD_ADDRESS
 
     #return json.dumps(note)
     with open(VERSION_FILE, "w") as f:

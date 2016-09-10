@@ -48,3 +48,4 @@ class UploadBannerView(View):
             except Exception as e:
                 print(e)
                 return jsonify(ERROR=str(e))
+
