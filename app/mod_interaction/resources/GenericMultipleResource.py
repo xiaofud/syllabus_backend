@@ -32,6 +32,7 @@ class GenericMultipleResource(Resource):
         args = {}
         if "get" in self.parsers:
             args.update(self.parsers["get"].parse_args())
+        # print(args)
         result = common.query_multiple(self.model, **args)
         if result == False:
             return {"error": "wrong field name"}, 400

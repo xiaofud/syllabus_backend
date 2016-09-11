@@ -9,6 +9,19 @@
     <script src="{{ url_for('static', filename='jquery-2.2.0.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-3.3.5-dist/css/bootstrap.min.css') }}">
 
+    <script>
+        function clearContent(index){
+{#            alert("#url_" + index);#}
+{#            console.log("#url_" + index);#}
+            var url = $("#url_" + index);
+            var link = $("#link_" + index);
+            var desc = $("#desc_" + index);
+            url.val("");
+            link.val("");
+            desc.val("");
+        }
+    </script>
+
 </head>
 <body>
 
@@ -43,21 +56,20 @@
                         <img src="{{ notification.url }}">
                     </p>
                     <div class="form-group form-group-sm">
-                        <label for="url">图片链接</label>
-                        <input class="form-control" name="url" id="url" type="url" value="{{ notification.url }}">
+                        <label for="url_{{ loop.index }}">图片链接</label>
+                        <input id="url_{{ loop.index }}" class="form-control" name="url"  type="url" value="{{ notification.url }}">
                     </div>
 
                     <div class="form-group form-group-sm">
-                        <label for="link">点开的链接</label>
-                        <input class="form-control" type="text" value="{{notification.link}}" name="link" id="link">
+                        <label for="link_{{ loop.index }}">点开的链接</label>
+                        <input id="link_{{ loop.index }}" class="form-control" type="text" value="{{notification.link}}" name="link" >
                     </div>
 
                     <div class="form-group form-group-sm">
-                        <label for="desc">图片描述</label>
-                        <textarea class="form-control" id="desc" name="desc">{{notification.description}}</textarea>
+                        <label for="desc_{{ loop.index }}">图片描述</label>
+                        <textarea id="desc_{{ loop.index }}" class="form-control"  name="desc">{{notification.description}}</textarea>
                     </div>
-
-
+                    <button onclick="clearContent('{{ loop.index }}');" type="button" id="clearButton{{ loop.index }}" class="btn btn-danger">清空</button>
                 {% endfor %}
                 {% if len < 5 %}
                     {% set n = 5 - len %}
@@ -65,23 +77,24 @@
                         <h3 class="page-header">{{ loop.index + len }}</h3>
 
                         <div class="form-group form-group-sm">
-                            <label for="url">图片链接</label>
-                            <input class="form-control" name="url" id="url" type="url" value="">
+                            <label for="url_{{ loop.index + len }}">图片链接</label>
+                            <input class="form-control" name="url" id="url_{{ loop.index + len }}" type="url" value="">
                         </div>
 
                             <div class="form-group form-group-sm">
-                            <label for="link">点开的链接</label>
-                            <input class="form-control" type="text" value="" name="link" id="link">
+                            <label for="link_{{ loop.index + len }}">点开的链接</label>
+                            <input class="form-control" type="text" value="" name="link" id="link_{{ loop.index + len }}">
                         </div>
 
                         <div class="form-group form-group-sm">
-                            <label for="desc">图片描述</label>
-                            <textarea class="form-control" id="desc" name="desc"></textarea>
+                            <label for="desc_{{ loop.index + len }}">图片描述</label>
+                            <textarea class="form-control" id="desc_{{ loop.index + len }}" name="desc"></textarea>
                         </div>
-
+                        <button onclick="clearContent({{ loop.index + len }})" type="button" id="clearButton{{ loop.index + len}}" class="btn btn-danger">清空</button>
                     {% endfor %}
 
                 {% endif %}
+                <hr/>
                 <button type="submit" class="btn btn-primary">修改</button>
             </form>
             </div>

@@ -72,4 +72,4 @@ class SyllabusResource(Resource):
 
             return result
         except requests.exceptions.ConnectionError:
-            return {"error": "connection refused"}, 400
+            return {"error": "connection refused"}, 521

@@ -21,10 +21,13 @@ admin.init_app(app)
 # 注意要等db已经建立好之后, 再去import blueprint, 因为blueprint里面需要app的db
 # 注册blueprint
 from app.mod_interaction import interaction_blueprint
+from app.mod_interaction.api_v2_1 import interaction_blueprint2_1
 from app.mod_credit import credit_blueprint
 
 app.register_blueprint(interaction_blueprint)
+app.register_blueprint(interaction_blueprint2_1)
 app.register_blueprint(credit_blueprint)
+
 
 # 导入views
 from app import views
