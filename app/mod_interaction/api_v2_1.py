@@ -41,7 +41,7 @@ api_v2_1 = Api(interaction_blueprint2_1, prefix="/api/v2.1")
 @api_v2_1.representation("application/json")
 def output_json(data, code, headers=None):
     response_data = ResultResponse.ResultResponse()
-    response_data.code = code
+    response_data.code = 200
     # response_data.data = data
     if "error" in data:
         response_data.message = data["error"]
