@@ -72,4 +72,5 @@ class SyllabusResource(Resource):
 
             return result
         except requests.exceptions.ConnectionError:
+            # 校内服务器错误
             return {"error": "connection refused"}, 521

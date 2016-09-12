@@ -31,7 +31,7 @@ from app.mod_interaction.resources.ActivityResource import ActivityResource
 interaction_blueprint2_1 = Blueprint(
     "interaction2",
     __name__,
-    url_prefix="/interaction2",
+    url_prefix="/interaction",
     template_folder='templates'
 )   # url 必须以 / 开头
 
@@ -42,11 +42,13 @@ api_v2_1 = Api(interaction_blueprint2_1, prefix="/api/v2.1")
 def output_json(data, code, headers=None):
     response_data = ResultResponse.ResultResponse()
     response_data.code = code
-    response_data.data = data
+    # response_data.data = data
     if "error" in data:
         response_data.message = data["error"]
+        response_data.data = {}
     else:
         response_data.message = "OK"
+        response_data.data = data
     resp = make_response(response_data.to_json(), code)
     resp.headers.extend(headers or {})
     return resp
