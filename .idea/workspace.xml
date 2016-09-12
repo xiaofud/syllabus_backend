@@ -100,26 +100,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="api_v2_1.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/mod_interaction/api_v2_1.py">
+      <file leaf-file-name="syllabus_resource.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/mod_credit/resources/syllabus_resource.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="50" column="8" selection-start-line="50" selection-start-column="8" selection-end-line="53" selection-end-column="40" />
-              <folding>
-                <element signature="e#103#130#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="api_v2_1.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/mod_credit/api_v2_1.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7305195">
-              <caret line="40" column="54" selection-start-line="40" selection-start-column="54" selection-end-line="40" selection-end-column="54" />
-              <folding>
-                <element signature="e#100#142#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.8538961">
+              <caret line="68" column="35" selection-start-line="68" selection-start-column="35" selection-end-line="68" selection-end-column="35" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -186,8 +172,8 @@
         <option value="$PROJECT_DIR$/app/mod_interaction/__init__.py" />
         <option value="$PROJECT_DIR$/app/mod_credit/resources/syllabus_resource.py" />
         <option value="$PROJECT_DIR$/app/__init__.py" />
-        <option value="$PROJECT_DIR$/app/mod_interaction/api_v2_1.py" />
         <option value="$PROJECT_DIR$/app/mod_credit/api_v2_1.py" />
+        <option value="$PROJECT_DIR$/app/mod_interaction/api_v2_1.py" />
       </list>
     </option>
   </component>
@@ -338,7 +324,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="mod_interaction" />
+              <option name="myItemId" value="mod_credit" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -357,6 +343,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="mod_credit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -978,13 +968,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/mod_interaction/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.86451614">
-          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/version.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4347181">
@@ -1104,16 +1087,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/mod_credit/resources/syllabus_resource.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1006494">
-          <caret line="68" column="35" selection-start-line="68" selection-start-column="35" selection-end-line="68" selection-end-column="35" />
-          <folding>
-            <element signature="e#58#102#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.26298702">
@@ -1124,8 +1097,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/mod_interaction/api_v2_1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="8" selection-start-line="50" selection-start-column="8" selection-end-line="53" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.35714287">
+          <caret line="53" column="44" selection-start-line="53" selection-start-column="44" selection-end-line="53" selection-end-column="44" />
           <folding>
             <element signature="e#103#130#0" expanded="true" />
           </folding>
@@ -1134,11 +1107,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/mod_credit/api_v2_1.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7305195">
-          <caret line="40" column="54" selection-start-line="40" selection-start-column="54" selection-end-line="40" selection-end-column="54" />
+        <state vertical-scroll-proportion="0.53246754">
+          <caret line="39" column="44" selection-start-line="39" selection-start-column="37" selection-end-line="39" selection-end-column="44" />
           <folding>
             <element signature="e#100#142#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/mod_interaction/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.86525977">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/mod_credit/resources/syllabus_resource.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8538961">
+          <caret line="68" column="35" selection-start-line="68" selection-start-column="35" selection-end-line="68" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>

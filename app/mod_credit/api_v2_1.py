@@ -37,7 +37,7 @@ def output_json(data, code, headers=None):
         if 200 < code or code > 200:
             response_data.message = 'fail'
         else:
-            response_data.message = 'ok'
+            response_data.message = 'success'
     resp = make_response(response_data.to_json(), code)
     resp.headers.extend(headers or {})
     return resp
