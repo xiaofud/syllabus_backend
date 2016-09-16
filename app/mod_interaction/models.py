@@ -292,6 +292,48 @@ class UnRead(db.Model):
     def __repr__(self):
         return "<UnRead uid: %r pid: %r>" % (self.uid, self.post_id)
 
+class Collector(db.Model):
+    """
+    用于记录收集对象以及其创建者
+    """
+    __tablename__ = "collectors"
+
+    # 主键
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # 课表用户发送时候需要附上这个不重复的6位独特的数字串
+    collection_id = db.Column(db.VARCHAR(6), unique=True)
+
+    # 开始年份
+    start_year = db.Column(db.SMALLINT, nullable=False)
+
+    # 学期, 对应学分制, 春夏秋
+    season = db.Column(db.SMALLINT, nullable=False)
+
+    # 创建这个集合的用户id
+    uid = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+class SyllabusCollection(db.Model):
+    """
+    记录用户上传的课表
+    """
+
+    __tablename__ = "syllabus_collection"
+
+    # 主键
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    # 课表用户发送时候需要附上这个不重复的6位独特的数字串
+    collection_id = db.Column(db.VARCHAR(6), nullable=False)
+
+    # 课表的JSON信息
+    syllabus = db.Column(db.TEXT, nullable=False)
+
+    # 用户账号
+    account = db.Column(db.String(20), nullable=False)
+
+
+
 # 新的表
 # class Shop(db.Model):
 #
