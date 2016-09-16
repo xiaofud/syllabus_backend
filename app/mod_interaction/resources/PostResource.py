@@ -8,6 +8,7 @@ from app.mod_interaction.resources.GenericSingleResource import GenericSingleRes
 from app.mod_interaction.resources.GenericMultipleResource import GenericMultipleResource
 from app.mod_interaction.database_operations import common
 from app.mod_interaction.models import Post
+from app.mod_interaction.resources import helpers
 # from app.mod_interaction.resources import ThumbUpResource
 
 thumb_ups_structure = {
@@ -115,13 +116,21 @@ get_multiple_posts_parser.add_argument(common.QUERY_ATTR_FILTER_VALUE, location=
 #     # "user": fields.Nested(SINGLE_USER_STRUCTURE)
 # }
 
+# 用于处理数据
+def posts_handler(posts):
+    notice = helpers.load_notice()
+    if notice is not None:
+        posts.insert(0, notice)
+    return posts
+
 MULTIPLE_USERS_INITIAL_KWARGS = {
     GenericMultipleResource.MARSHAL_STRUCTURE: SINGLE_POST_STRUCTURE,
     GenericMultipleResource.MODEL: Post,
     GenericMultipleResource.PARSER_FOR_METHODS_DICT: {
         "get": get_multiple_posts_parser
     },
-    GenericMultipleResource.ENVELOPE: "post_list"
+    GenericMultipleResource.ENVELOPE: "post_list",
+    GenericMultipleResource.RESULT_CALLBACK: posts_handler
 }
 
 

@@ -13,6 +13,8 @@ config["BASE_DIR"] = BASE_DIR
 config["VERSION_DIR"] = BASE_DIR + os.path.sep + "versions"
 config["BANNER_DIR"] = BASE_DIR + os.path.sep + "banners"
 config["BANNER_UPLOAD_DIR"] = "/home/hjxf/share_folder"
+# 存放公告文件的文件夹
+config["NOTICE_DIR"] = BASE_DIR + os.path.sep + "notice"
 # 最大文件为1MB
 config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 

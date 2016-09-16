@@ -21,11 +21,16 @@ class GenericMultipleResource(Resource):
     # 用于封装最后的结果, 即 {"ENVELOPE": result}
     ENVELOPE = "ENVELOPE"
 
+    # 用于处理返回的数据
+    RESULT_CALLBACK = "RESULT_CALLBACK"
+
+
     def __init__(self, **kwargs):
         self.marshal_structure = kwargs.pop(GenericMultipleResource.MARSHAL_STRUCTURE, None)
         self.model = kwargs.pop(GenericMultipleResource.MODEL, None)
         self.parsers = kwargs.pop(GenericMultipleResource.PARSER_FOR_METHODS_DICT, None)
         self.envelope = kwargs.pop(GenericMultipleResource.ENVELOPE, "data_list")
+        self.result_callback = kwargs.pop(GenericMultipleResource.RESULT_CALLBACK, None)
 
 
     def get(self):
@@ -39,5 +44,7 @@ class GenericMultipleResource(Resource):
         if len(result) == 0:
             return {"error": "no resources yet"}, 404
         else:
+            if self.result_callback is not None:
+                return marshal(self.result_callback(result), self.marshal_structure, envelope=self.envelope)
             return marshal(result, self.marshal_structure, envelope=self.envelope)
 

@@ -100,3 +100,10 @@ def make_notification(urls, links, descs):
         return True
     return False
 
+def load_notice():
+    filename = os.path.join(config.config["NOTICE_DIR"], "notice.txt")
+    if not os.path.exists(filename):
+        return None
+    with open(filename) as f:
+        return json.load(f)
+    return None
