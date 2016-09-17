@@ -27,6 +27,8 @@ from app.mod_interaction.resources.UnreadResource import UnreadResource
 from app.mod_interaction.resources.CarpoolResource import CarpoolSResource, CarpoolResource
 from app.mod_interaction.resources.PassengerResource import PassengerResource
 from app.mod_interaction.resources.ActivityResource import ActivityResource
+from app.mod_interaction.resources.CollectorResource import CollectorResource
+from app.mod_interaction.resources.SyllabusCollectionResource import SyllabusCollectionResource
 
 interaction_blueprint2_1 = Blueprint(
     "interaction2",
@@ -116,5 +118,8 @@ api_v2_1.add_resource(PassengerResource, "/passenger", "/passenger/", endpoint="
 # ================= 活动消息 =================
 api_v2_1.add_resource(ActivityResource, "/activity", "/activity/", endpoint="activity")
 # ================= 活动消息 =================
+
+api_v2_1.add_resource(CollectorResource, "/collector", "/collector/", endpoint="collector")
+api_v2_1.add_resource(SyllabusCollectionResource, "/syllabus_collection", "/syllabus_collection/", endpoint="syllabus_collection")
 
 
