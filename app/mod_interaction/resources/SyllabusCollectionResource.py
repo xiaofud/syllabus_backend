@@ -100,6 +100,17 @@ class SyllabusCollectionResource(Resource):
         if collector.start_year != args["start_year"] or collector.season != args["season"]:
             return {"error": "semester doesn't match"}, 400
 
+        collection = models.SyllabusCollection.query.filter_by(account=user.account).filter_by(collection_id=args["collection_id"]).first()
+
+        if collection is not None:
+            try:
+                # 删除原有的数据
+                print("deleting original data")
+                db.session.delete(collection)
+                db.session.commit()
+            except Exception as e:
+                return {"error": repr(e)}, 500
+
         collection = models.SyllabusCollection(collection_id=args["collection_id"], syllabus=args["syllabus"], account=args["username"])
 
         result = common.add_to_db(db, collection)

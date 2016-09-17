@@ -46,10 +46,21 @@ class CollectorResource(Resource):
         if not common.check_token(token_check):
             return {"error": "token is wrong"}, 401
 
-        # collection_ids = models.Collector.query.with_entities(models.Collector.collection_id).filter_by(uid=user.id).all()
         collectors = models.Collector.query.filter_by(uid=user.id).all()
-        collectors = [ dict(collection_id=x.collection_id, start_year=x.start_year, season=x.season) for x in collectors ]
-        return {"collection_ids": collectors}
+        result = []
+        for collector in collectors:
+            count = models.SyllabusCollection.query.with_entities(models.SyllabusCollection.collection_id).filter_by(collection_id=collector.collection_id).count()
+            result.append(
+                {
+                    "collection_id": collector.collection_id,
+                    "start_year": collector.start_year,
+                    "season": collector.season,
+                    "count": count
+                }
+            )
+        # collectors = [ dict(collection_id=x.collection_id, start_year=x.start_year, season=x.season) for x in collectors ]
+
+        return {"collection_ids": result}
 
     def post(self):
         """
