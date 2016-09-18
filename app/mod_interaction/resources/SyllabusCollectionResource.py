@@ -14,6 +14,7 @@ class SyllabusCollectionResource(Resource):
 
     POST_PARSER = RequestParser(trim=True)
     GET_PARSER = RequestParser(trim=True)
+    DELETE_PARSER = RequestParser(trim=True)
 
     def get(self):
         """
@@ -109,6 +110,7 @@ class SyllabusCollectionResource(Resource):
                 db.session.delete(collection)
                 db.session.commit()
             except Exception as e:
+                db.session.rollback()
                 return {"error": repr(e)}, 500
 
         collection = models.SyllabusCollection(collection_id=args["collection_id"], syllabus=args["syllabus"], account=args["username"])
@@ -118,3 +120,47 @@ class SyllabusCollectionResource(Resource):
             return {"id": collection.id}
         else:
             return {"error": "commit error in mysql"}, 500
+
+
+    def delete(self):
+        self.DELETE_PARSER.add_argument("username", required=True, location="headers")
+        self.DELETE_PARSER.add_argument("token", required=True, location="headers")
+        self.DELETE_PARSER.add_argument("id", required=True, location="headers")
+
+        args = self.DELETE_PARSER.parse_args()
+        # 检查token
+        user = common.query_single_by_filed(models.User, "account", args["username"])
+        if user is None:
+            return {"error": "user doesn't exist"}, 404
+        token_check = {
+            "uid": user.id,
+            "token": args["token"]
+        }
+        if not common.check_token(token_check):
+            return {"error": "token is wrong"}, 401
+
+        collection = common.query_single_by_id(models.SyllabusCollection, args["id"])
+        if collection is None:
+            return {"error": "collection not found"}, 404
+        if collection.account == args["username"]:
+            try:
+                db.session.delete(collection)
+                db.session.commit()
+                return {"status": "deleted"}
+            except Exception as e:
+                db.session.rollback()
+                return {"error": repr(e)}, 500
+        else:
+            collector = common.query_single_by_filed(models.Collector, "collection_id", collection.collection_id)
+            if collector is None:
+                return {"error": "collector not found"}, 404
+            if collector.uid == user.id:
+                try:
+                    db.session.delete(collection)
+                    db.session.commit()
+                    return {"status": "deleted"}
+                except Exception as e:
+                    db.session.rollback()
+                    return {"error": repr(e)}, 500
+            else:
+                return {"error": "have not the permission"}, 403
