@@ -55,7 +55,7 @@ class SyllabusCollectionResource(Resource):
             return {"error": "have not the permission"}, 403
 
         collections = models.SyllabusCollection.query.filter_by(collection_id=args["collectionID"]).all()
-        collections = [ dict(account=x.account, syllabus=x.syllabus) for x in collections ]
+        collections = [ dict(id=x.id, account=x.account, syllabus=x.syllabus) for x in collections ]
         return {"collections": collections}
 
 
