@@ -1,3 +1,5 @@
+/oauth2_test.py
+/app/mod_credit/resources/oauth2_token_resource.py
 # cached files
 __pycache__/
 
