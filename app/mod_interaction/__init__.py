@@ -33,6 +33,7 @@ from app.mod_interaction.resources.PassengerResource import PassengerResource
 from app.mod_interaction.resources.ActivityResource import ActivityResource
 from app.mod_interaction.resources.CollectorResource import CollectorResource
 from app.mod_interaction.resources.SyllabusCollectionResource import SyllabusCollectionResource
+from app.mod_interaction.resources.AnonymousPostResource import AnonymousResource
 
 # views
 from app.mod_interaction.views import BannerView, UploadBannerView
@@ -105,6 +106,11 @@ api_v2.add_resource(ActivityResource, "/activity", "/activity/", endpoint="activ
 api_v2.add_resource(CollectorResource, "/collector", "/collector/", endpoint="collector")
 api_v2.add_resource(SyllabusCollectionResource, "/syllabus_collection", "/syllabus_collection/", endpoint="syllabus_collection")
 # ================= 申请课表收集 =================
+
+# ================= 匿名消息 =================
+api_v2.add_resource(AnonymousResource, "/anonymous", "/anonymous/", endpoint="anonymous")
+# ================= 匿名消息 =================
+
 
 # ============== 添加views ==============
 

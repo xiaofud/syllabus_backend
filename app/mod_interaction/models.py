@@ -94,6 +94,9 @@ class Post(db.Model):
     # content视为URL, description为描述信息
     POST_TYPE_SCHOOL_ACTIVITY = 2
 
+    # 匿名消息，当type为3的时候不记录用户UID
+    POST_TYPE_ANONYMOUS = 3
+
     __tablename__ = "posts"
 
     # 主键
