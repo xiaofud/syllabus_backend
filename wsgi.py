@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from app import app as application, db
 # 尝试解决 MySQL server has gone away 的问题
 application.config["SQLALCHEMY_POOL_RECYCLE"] = 5
+app.config["SQLALCHEMY_ECHO"] = False
 db.create_all()
 application.debug = False
 

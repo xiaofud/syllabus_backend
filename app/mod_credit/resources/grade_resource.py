@@ -15,6 +15,8 @@ class GradeResource(Resource):
 
     def post(self):
         args = parser.parse_args()
+        # 日志
+        print(args["username"], "queries grade")
         try:
             resp = requests.post("http://127.0.0.1:8084/grade", data=args)
             return resp.json()
