@@ -49,6 +49,8 @@ def load_version():
     return None
 
 NOTIFICATION_FILE_PATH = os.path.join(config.config["BANNER_DIR"], "banner.txt")
+TERM_FILE_PATH = os.path.join(config.config["TERM_DIR"], "term.txt")
+
 
 def get_notification():
     if os.path.exists(NOTIFICATION_FILE_PATH):
@@ -56,6 +58,11 @@ def get_notification():
             return json.load(f)
     return None
 
+def get_term():
+    if os.path.exists(TERM_FILE_PATH):
+        with open(TERM_FILE_PATH, encoding='utf-8') as f:
+            return json.load(f)
+    return None
 
 def make_notification(urls, links, descs):
     """

@@ -18,6 +18,8 @@ config["NOTICE_DIR"] = BASE_DIR + os.path.sep + "notice"
 # 最大文件为1MB
 config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 
+config["TERM_DIR"] = BASE_DIR + os.path.sep + "term"
+
 # private settings
 with open(os.path.join(BASE_DIR, "config.conf")) as f:
     config.update(json.load(f))
